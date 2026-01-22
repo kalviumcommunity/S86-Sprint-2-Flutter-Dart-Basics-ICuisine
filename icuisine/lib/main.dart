@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/welcome_screen.dart';
+import 'screens/responsive_home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +22,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Roboto',
       ),
-      home: const WelcomeScreen(),
+      // Change to ResponsiveHome to test the responsive layout
+      home: const ResponsiveHome(), // Or use WelcomeScreen() for the welcome page
     );
   }
 }
