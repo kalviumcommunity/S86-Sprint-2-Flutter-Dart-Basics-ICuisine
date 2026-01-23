@@ -7,24 +7,33 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/testing.dart';
 
+import 'package:icuisine/firebase_options.dart';
 import 'package:icuisine/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    setupFirebaseCoreMocks();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  });
+
+  testWidgets('Login screen renders expected fields and actions', (tester) async {
     await tester.pumpWidget(const MyApp());
+    await tester.pumpAndSettle();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Core login UI elements
+    expect(find.text('Welcome Back'), findsOneWidget);
+    expect(find.text('Log In'), findsOneWidget);
+    expect(find.widgetWithIcon(TextFormField, Icons.email), findsOneWidget);
+    expect(find.widgetWithIcon(TextFormField, Icons.lock), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Forgot password and sign-up navigation should be visible
+    expect(find.text('Forgot Password?'), findsOneWidget);
+    expect(find.text('Sign Up'), findsOneWidget);
   });
 }

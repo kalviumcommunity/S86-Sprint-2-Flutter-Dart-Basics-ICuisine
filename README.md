@@ -6,6 +6,28 @@ ICuisine is a mobile application designed to help popular street-food vendors ma
 ## Problem Statement
 Popular street-food vendors face long queues and order mismanagement during rush hours. How might we help them accept and manage orders smoothly without slowing down service?
 
+## Sprint 2 – Folder Structure Exploration
+
+- Cross-platform Flutter app (mobile, web, desktop) with Firebase config in lib/firebase_options.dart; install dependencies with `flutter pub get` and run with `flutter run -d <device>`.
+- Detailed folder and file roles are documented in [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md).
+
+Folder snapshot (current):
+```
+icuisine/
+├── lib/
+│   ├── main.dart
+│   ├── firebase_options.dart
+│   ├── screens/...
+│   └── services/...
+├── android/ ios/ web/ windows/ macos/ linux/
+├── test/
+└── pubspec.yaml
+```
+
+Reflection
+- Knowing each folder’s purpose accelerates onboarding and debugging because contributors can navigate directly to UI, services, or platform configs.
+- A clean, predictable structure reduces merge conflicts and keeps cross-platform build settings isolated from shared Dart code.
+
 ## Project Structure
 
 ### Directory Organization
