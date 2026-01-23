@@ -280,6 +280,421 @@ To see the responsive layout in action:
 
 ---
 
+## Firebase Integration (Sprint 2)
+
+### Overview
+iCuisine is now integrated with Firebase to provide secure authentication, real-time data storage, and cloud-based backend services. This enables vendors and customers to manage orders efficiently with data synchronized across devices in real-time.
+
+### Firebase Features Implemented
+
+#### 1. Firebase Authentication
+- **User Sign Up**: Create new accounts with email and password
+- **User Login**: Secure authentication with existing credentials
+- **Password Reset**: Email-based password recovery
+- **User Logout**: Secure session termination
+- **Account Deletion**: Complete user account removal
+
+#### 2. Cloud Firestore Database
+- **User Data Management**: Store user profiles (name, email, user type)
+- **Order Management**: CRUD operations for orders with real-time updates
+- **Menu Items**: Store and manage vendor menu items
+- **Real-time Sync**: Instant data updates across all connected devices
+- **Status Tracking**: Track order status (pending, preparing, ready, completed)
+
+### Firebase Setup Instructions
+
+#### Prerequisites
+- Flutter SDK installed
+- Firebase CLI installed (`npm install -g firebase-tools`)
+- FlutterFire CLI installed (`dart pub global activate flutterfire_cli`)
+
+#### Step 1: Create Firebase Project
+1. Go to [Firebase Console](https://console.firebase.google.com/)
+2. Click "Add project" and follow the setup wizard
+3. Enter project name: `icuisine-app`
+4. Enable Google Analytics (optional)
+5. Click "Create project"
+
+#### Step 2: Configure Firebase for Flutter
+```bash
+# Login to Firebase
+firebase login
+
+# Install FlutterFire CLI
+dart pub global activate flutterfire_cli
+
+# Navigate to your project directory
+cd icuisine
+
+# Configure Firebase
+flutterfire configure
+```
+
+Select your Firebase project and platforms (Android, iOS, Web) when prompted.
+
+#### Step 3: Enable Firebase Services
+
+**Enable Authentication:**
+1. In Firebase Console, go to **Authentication** → **Sign-in method**
+2. Enable **Email/Password** provider
+3. Click "Save"
+
+**Enable Cloud Firestore:**
+1. Go to **Firestore Database** → **Create database**
+2. Start in **Test mode** (for development)
+3. Choose a location closest to your users
+4. Click "Enable"
+
+**Set Firestore Security Rules (for production):**
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users can read/write their own data
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Orders: users can manage their own orders
+    match /orders/{orderId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && 
+        resource.data.userId == request.auth.uid;
+    }
+    
+    // Menu items: authenticated users can read, vendors can write
+    match /menu_items/{itemId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+  }
+}
+```
+
+#### Step 4: Install Dependencies
+```bash
+# Navigate to your Flutter project
+cd icuisine
+
+# Get dependencies
+flutter pub get
+
+# Run the app
+flutter run
+```
+
+### Dependencies Used
+
+```yaml
+dependencies:
+  firebase_core: ^3.0.0       # Firebase core functionality
+  firebase_auth: ^5.0.0       # Authentication services
+  cloud_firestore: ^5.0.0     # Cloud database
+```
+
+### Project Structure
+
+```
+lib/
+├── services/
+│   ├── auth_service.dart         # Authentication logic
+│   └── firestore_service.dart    # Firestore CRUD operations
+├── screens/
+│   ├── login_screen.dart         # User login interface
+│   ├── signup_screen.dart        # User registration interface
+│   └── user_dashboard.dart       # Main dashboard with orders
+└── main.dart                     # Firebase initialization
+```
+
+### Code Examples
+
+#### Authentication Service (auth_service.dart)
+
+```dart
+import 'package:firebase_auth/firebase_auth.dart';
+
+class AuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // Sign up with email and password
+  Future<User?> signUp(String email, String password) async {
+    try {
+      final credential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return credential.user;
+    } on FirebaseAuthException catch (e) {
+      print('Sign up error: ${e.code} - ${e.message}');
+      throw _handleAuthException(e);
+    }
+  }
+
+  // Sign in with email and password
+  Future<User?> signIn(String email, String password) async {
+    try {
+      final credential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return credential.user;
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthException(e);
+    }
+  }
+
+  // Sign out
+  Future<void> signOut() async {
+    await _auth.signOut();
+  }
+}
+```
+
+#### Firestore Service (firestore_service.dart)
+
+```dart
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class FirestoreService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Add user data
+  Future<void> addUserData(String uid, Map<String, dynamic> data) async {
+    await _firestore.collection('users').doc(uid).set({
+      ...data,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  // Add order
+  Future<String> addOrder(Map<String, dynamic> orderData) async {
+    final docRef = await _firestore.collection('orders').add({
+      ...orderData,
+      'createdAt': FieldValue.serverTimestamp(),
+      'status': 'pending',
+    });
+    return docRef.id;
+  }
+
+  // Stream user orders in real-time
+  Stream<QuerySnapshot> streamUserOrders(String userId) {
+    return _firestore
+        .collection('orders')
+        .where('userId', isEqualTo: userId)
+        .orderBy('createdAt', descending: true)
+        .snapshots();
+  }
+
+  // Update order status
+  Future<void> updateOrder(String orderId, Map<String, dynamic> data) async {
+    await _firestore.collection('orders').doc(orderId).update({
+      ...data,
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  // Delete order
+  Future<void> deleteOrder(String orderId) async {
+    await _firestore.collection('orders').doc(orderId).delete();
+  }
+}
+```
+
+#### Real-time Data Display (StreamBuilder)
+
+```dart
+StreamBuilder<QuerySnapshot>(
+  stream: _firestoreService.streamUserOrders(user.uid),
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return CircularProgressIndicator();
+    }
+
+    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+      return Text('No orders yet');
+    }
+
+    final orders = snapshot.data!.docs;
+    
+    return ListView.builder(
+      itemCount: orders.length,
+      itemBuilder: (context, index) {
+        final order = orders[index];
+        final orderData = order.data() as Map<String, dynamic>;
+        
+        return ListTile(
+          title: Text(orderData['description']),
+          subtitle: Text('Status: ${orderData['status']}'),
+          trailing: Text('\$${orderData['total']}'),
+        );
+      },
+    );
+  },
+)
+```
+
+### Features & Functionality
+
+#### Sign Up Flow
+1. User opens the app and navigates to Sign Up screen
+2. Enters full name, email, password, and selects user type (Customer/Vendor)
+3. Firebase Authentication creates the account
+4. User data is saved to Firestore in `users` collection
+5. User is automatically redirected to the Dashboard
+
+#### Login Flow
+1. User enters email and password
+2. Firebase authenticates credentials
+3. On success, user is redirected to Dashboard
+4. User data is loaded from Firestore
+5. Real-time order updates begin
+
+#### Dashboard Features
+- **User Profile**: Displays user info (name, email, type) from Firestore
+- **Add Orders**: Create new orders with descriptions
+- **View Orders**: Real-time list of all user orders
+- **Update Status**: Change order status (pending → preparing → ready → completed)
+- **Delete Orders**: Remove orders from database
+- **Logout**: Sign out and return to login screen
+
+### Testing Guide
+
+#### Test Authentication
+1. Run the app: `flutter run`
+2. Click "Sign Up" and create a new account
+3. Verify account creation in Firebase Console → Authentication
+4. Test login with the new credentials
+5. Test "Forgot Password" functionality
+6. Test logout
+
+#### Test Firestore Operations
+1. After logging in, add a new order
+2. Check Firebase Console → Firestore Database → `orders` collection
+3. Verify the order appears in real-time
+4. Update order status in the app
+5. Verify status change in Firebase Console
+6. Delete an order and confirm removal
+
+#### Test Real-time Sync
+1. Open the app on two devices/browsers
+2. Log in with the same account
+3. Add an order on device 1
+4. Observe instant update on device 2
+5. Update status on device 2
+6. Observe change on device 1
+
+### Screenshots
+
+*(Include screenshots showing):*
+1. **Login Screen**: Email/password input fields
+2. **Sign Up Screen**: Registration form with user type selection
+3. **User Dashboard**: Profile card with user info
+4. **Orders List**: Real-time orders with status indicators
+5. **Firebase Console - Authentication**: User list
+6. **Firebase Console - Firestore**: Orders collection with data
+
+### Challenges & Solutions
+
+#### Challenge 1: Firebase Initialization
+**Problem**: App crashed on startup with "Firebase not initialized" error.
+
+**Solution**: Added `WidgetsFlutterBinding.ensureInitialized()` and `await Firebase.initializeApp()` in main() before runApp().
+
+```dart
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const MyApp());
+}
+```
+
+#### Challenge 2: Real-time Updates Not Working
+**Problem**: Orders weren't updating in real-time when status changed.
+
+**Solution**: Used `StreamBuilder` widget to listen to Firestore snapshots instead of one-time reads with `FutureBuilder`.
+
+```dart
+StreamBuilder<QuerySnapshot>(
+  stream: _firestoreService.streamUserOrders(userId),
+  builder: (context, snapshot) {
+    // UI updates automatically when data changes
+  },
+)
+```
+
+#### Challenge 3: Error Handling
+**Problem**: Generic error messages weren't helpful for users.
+
+**Solution**: Created custom error handler in AuthService to provide user-friendly messages for each Firebase error code.
+
+```dart
+String _handleAuthException(FirebaseAuthException e) {
+  switch (e.code) {
+    case 'weak-password':
+      return 'Password must be at least 6 characters';
+    case 'email-already-in-use':
+      return 'Account already exists with this email';
+    // ... more cases
+  }
+}
+```
+
+#### Challenge 4: Data Persistence
+**Problem**: User data wasn't persisting after account creation.
+
+**Solution**: Immediately saved user profile to Firestore after successful authentication using a separate collection.
+
+```dart
+if (user != null) {
+  await _firestoreService.addUserData(user.uid, {
+    'name': _nameController.text.trim(),
+    'email': _emailController.text.trim(),
+    'userType': _userType,
+  });
+}
+```
+
+### Reflection: Learning Outcomes
+
+**How does Firebase improve scalability?**
+- **Automatic Scaling**: Firebase handles infrastructure, automatically scaling from 1 to millions of users without manual server management
+- **Real-time Sync**: Changes propagate instantly to all connected clients, reducing polling and server load
+- **Offline Support**: Firestore caches data locally, enabling offline functionality and reducing server requests
+- **Global CDN**: Firebase hosting and storage use Google's global infrastructure for fast worldwide access
+
+**How does Firebase enable real-time collaboration?**
+- **Instant Updates**: Multiple vendors can see order updates in real-time without refreshing
+- **Conflict Resolution**: Firestore handles concurrent writes automatically with timestamps
+- **Live Dashboard**: Orders appear on vendor dashboard immediately when customers place them
+- **Status Tracking**: All stakeholders see order status changes instantly (pending → preparing → ready)
+
+**Benefits for iCuisine:**
+1. **Reduced Development Time**: No need to build custom backend, authentication, or database systems
+2. **Cost-Effective**: Pay only for what you use, with generous free tier for development
+3. **Security**: Built-in authentication and security rules protect user data
+4. **Reliability**: 99.95% uptime SLA ensures vendors can always access the system
+5. **Speed**: Real-time updates eliminate refresh delays during rush hours
+6. **Flexibility**: Easy to add new features like push notifications, analytics, and cloud functions
+
+### Next Steps
+
+- [ ] Add push notifications for new orders
+- [ ] Implement Firebase Storage for menu item images
+- [ ] Add Firebase Analytics for user behavior tracking
+- [ ] Create admin dashboard for vendor management
+- [ ] Implement Firebase Cloud Functions for automated order processing
+- [ ] Add Firebase Performance Monitoring
+
+### Resources
+- [Firebase for Flutter Setup](https://firebase.google.com/docs/flutter/setup)
+- [Firebase Authentication Docs](https://firebase.google.com/docs/auth)
+- [Cloud Firestore Docs](https://firebase.google.com/docs/firestore)
+- [FlutterFire CLI Reference](https://firebase.flutter.dev/docs/cli)
+- [StreamBuilder Widget Guide](https://api.flutter.dev/flutter/widgets/StreamBuilder-class.html)
+
+---
+
 ## Getting Started
 
 (Add installation and setup instructions here)
