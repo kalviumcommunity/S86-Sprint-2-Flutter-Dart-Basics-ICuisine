@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/responsive_home.dart';
+import 'screens/login_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -22,8 +29,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Roboto',
       ),
-      // Change to ResponsiveHome to test the responsive layout
-      home: const ResponsiveHome(), // Or use WelcomeScreen() for the welcome page
+      // Start with login screen for Firebase authentication
+      home: const LoginScreen(),
     );
   }
 }
