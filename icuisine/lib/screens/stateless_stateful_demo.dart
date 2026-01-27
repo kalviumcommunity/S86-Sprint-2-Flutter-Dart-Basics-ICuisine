@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Main demo screen showcasing Stateless and Stateful widgets
 class StatelessStatefulDemo extends StatelessWidget {
-  const StatelessStatefulDemo({Key? key}) : super(key: key);
+  const StatelessStatefulDemo({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +67,10 @@ class DemoHeaderWidget extends StatelessWidget {
   final String subtitle;
 
   const DemoHeaderWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.subtitle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +119,7 @@ class DemoHeaderWidget extends StatelessWidget {
 /// STATEFUL WIDGET EXAMPLE 1: Counter
 /// This widget maintains a count state that increments/decrements
 class CounterWidget extends StatefulWidget {
-  const CounterWidget({Key? key}) : super(key: key);
+  const CounterWidget({super.key});
 
   @override
   State<CounterWidget> createState() => _CounterWidgetState();
@@ -228,7 +228,7 @@ class _CounterWidgetState extends State<CounterWidget> {
 /// STATEFUL WIDGET EXAMPLE 2: Color Changer
 /// This widget cycles through different colors on tap
 class ColorChangerWidget extends StatefulWidget {
-  const ColorChangerWidget({Key? key}) : super(key: key);
+  const ColorChangerWidget({super.key});
 
   @override
   State<ColorChangerWidget> createState() => _ColorChangerWidgetState();
@@ -336,7 +336,7 @@ class _ColorChangerWidgetState extends State<ColorChangerWidget> {
 /// STATEFUL WIDGET EXAMPLE 3: Theme Toggle
 /// This widget toggles between light and dark mode
 class ThemeToggleWidget extends StatefulWidget {
-  const ThemeToggleWidget({Key? key}) : super(key: key);
+  const ThemeToggleWidget({super.key});
 
   @override
   State<ThemeToggleWidget> createState() => _ThemeToggleWidgetState();
@@ -418,7 +418,7 @@ class _ThemeToggleWidgetState extends State<ThemeToggleWidget> {
                   onChanged: (value) {
                     _toggleTheme();
                   },
-                  activeColor: Colors.teal,
+                  activeThumbColor: Colors.teal,
                 ),
                 Text(
                   'Dark',
@@ -442,10 +442,10 @@ class InfoCardWidget extends StatelessWidget {
   final String content;
 
   const InfoCardWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.content,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

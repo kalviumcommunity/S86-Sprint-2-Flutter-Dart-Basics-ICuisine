@@ -252,7 +252,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                         // User Type Selection
                         DropdownButtonFormField<String>(
-                          value: _userType,
+                          initialValue: _userType,
                           decoration: InputDecoration(
                             labelText: 'I am a',
                             prefixIcon: const Icon(Icons.person_outline),
