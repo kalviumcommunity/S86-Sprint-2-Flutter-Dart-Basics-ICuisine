@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icuisine/services/auth_service.dart';
 import 'package:icuisine/services/firestore_service.dart';
 import 'login_screen.dart';
+import 'stateless_stateful_demo.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -208,6 +209,18 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             actions: [
+              IconButton(
+                icon: const Icon(Icons.widgets),
+                tooltip: 'Widget Demo',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const StatelessStatefulDemo(),
+                    ),
+                  );
+                },
+              ),
               IconButton(
                 icon: const Icon(Icons.notifications_outlined),
                 onPressed: () {

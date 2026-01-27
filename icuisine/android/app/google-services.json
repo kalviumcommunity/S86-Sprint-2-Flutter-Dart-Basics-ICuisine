@@ -1,43 +1,26 @@
 {
   "project_info": {
-    "project_number": "721018073572",
-    "project_id": "sprint2-icuisine-project",
-    "storage_bucket": "sprint2-icuisine-project.firebasestorage.app"
+    "project_number": "232472544702",
+    "project_id": "icuisine-41831",
+    "storage_bucket": "icuisine-41831.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:721018073572:android:12144f901bea9aa853d7f1",
+        "mobilesdk_app_id": "1:232472544702:android:e02efef291c1615f2365ef",
         "android_client_info": {
           "package_name": "com.example.icuisine"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "721018073572-e6fu449komgmnmr4e204k705mknjsh1u.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCD0SnZGKy4oEsK_TGwWz4E8g3bBGi3vwc"
+          "current_key": "AIzaSyDQx2CQX1Y-lcLxk18aPfU-qlFuCDkvh-8"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "721018073572-e6fu449komgmnmr4e204k705mknjsh1u.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "721018073572-1bn0g7c4s158r4t5oharub7g2aa0bfpc.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.icuisine"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

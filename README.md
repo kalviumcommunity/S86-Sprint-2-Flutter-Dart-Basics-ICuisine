@@ -80,6 +80,185 @@ This structure supports modular app design through:
 
 ---
 
+## Sprint 2 – Stateless vs Stateful Widgets
+
+### Overview
+Understanding the difference between **Stateless** and **Stateful** widgets is fundamental to building Flutter applications. This sprint demonstrates both widget types through an interactive demo application located at `lib/screens/stateless_stateful_demo.dart`.
+
+### What We Implemented
+
+#### 🎯 Demo Screen Features
+
+A comprehensive interactive screen showcasing:
+
+**Stateless Widgets (Immutable, Static UI):**
+- **DemoHeaderWidget** - Gradient header with title and icon
+- **InfoCardWidget** - Educational information display
+
+**Stateful Widgets (Mutable, Dynamic UI):**
+- **CounterWidget** 🔢 - Increment/Decrement/Reset functionality
+- **ColorChangerWidget** 🎨 - Cycles through 7 rainbow colors with smooth animations
+- **ThemeToggleWidget** 🌓 - Switches between Light/Dark modes
+
+### Key Concepts Demonstrated
+
+#### Stateless Widget Example
+```dart
+class DemoHeaderWidget extends StatelessWidget {
+  final String title;
+  final String subtitle;
+
+  const DemoHeaderWidget({
+    Key? key,
+    required this.title,
+    required this.subtitle,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          Icon(Icons.widgets, size: 60),
+          Text(title),
+          Text(subtitle),
+        ],
+      ),
+    );
+  }
+}
+```
+
+**Characteristics:**
+- ✅ Immutable - Cannot change after being built
+- ✅ No internal state management
+- ✅ Lightweight and efficient
+- ✅ Perfect for static UI components
+
+**Use Cases:** Headers, labels, icons, static text, layout containers
+
+#### Stateful Widget Example
+```dart
+class CounterWidget extends StatefulWidget {
+  const CounterWidget({Key? key}) : super(key: key);
+
+  @override
+  State<CounterWidget> createState() => _CounterWidgetState();
+}
+
+class _CounterWidgetState extends State<CounterWidget> {
+  int _count = 0;
+
+  void _increment() {
+    setState(() {
+      _count++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text('Count: $_count'),
+        ElevatedButton(
+          onPressed: _increment,
+          child: Text('Increase'),
+        ),
+      ],
+    );
+  }
+}
+```
+
+**Characteristics:**
+- ✅ Mutable state that can change over time
+- ✅ Uses `setState()` to trigger UI updates
+- ✅ Separated into Widget and State classes
+- ✅ Can react to user interactions and events
+
+**Use Cases:** Counters, forms, toggles, animations, timers
+
+### How to Access the Demo
+
+1. **Run the app:** `flutter run`
+2. **Login** to the application
+3. **Tap the widgets icon** (📦) in the top-right corner of the home screen
+4. **Interact** with the Counter, Color Changer, and Theme Toggle widgets
+
+### Navigation Integration
+
+Added a widgets icon button to the Home Screen app bar for easy access:
+```dart
+IconButton(
+  icon: const Icon(Icons.widgets),
+  tooltip: 'Widget Demo',
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const StatelessStatefulDemo(),
+      ),
+    );
+  },
+),
+```
+
+### Learning Outcomes
+
+#### Why Stateful Widgets Make Flutter Apps Dynamic
+- Enable real-time responses to user interactions
+- Support animations and smooth transitions
+- Handle form validation and dynamic input
+- Manage dynamic theming and personalization
+- React to external data changes and events
+
+#### Why Separate Static and Reactive UI
+- **Performance:** Stateless widgets are lighter and don't require state management overhead. Using them appropriately improves app performance.
+- **Maintainability:** Clear separation makes code easier to understand, debug, and modify. Developers can immediately identify dynamic parts.
+- **Reusability:** Stateless widgets are highly reusable across different parts of the app since they have no internal dependencies.
+- **Optimization:** Flutter's rendering engine can skip rebuilding stateless widgets, focusing only on parts that actually changed.
+- **Best Practices:** Following this pattern leads to cleaner, more testable code.
+
+### Best Practices Demonstrated
+
+1. ✅ Use StatelessWidget whenever possible for better performance
+2. ✅ Keep state as local as possible to the widget that needs it
+3. ✅ Use `const` constructors for Stateless widgets
+4. ✅ Call `setState()` only when state actually changes
+5. ✅ Separate concerns: static content vs dynamic behavior
+6. ✅ Use descriptive widget names that indicate their purpose
+
+### Updated Folder Structure
+
+```
+icuisine/
+├── lib/
+│   ├── main.dart
+│   ├── firebase_options.dart
+│   ├── screens/
+│   │   ├── home_screen.dart              # Main dashboard with stats & orders
+│   │   ├── login_screen.dart             # Authentication entry
+│   │   ├── signup_screen.dart            # User registration
+│   │   ├── user_dashboard.dart           # Original dashboard
+│   │   ├── widget_tree_demo.dart         # Interactive widget demo
+│   │   └── stateless_stateful_demo.dart  # ⭐ Widget types demo (NEW)
+│   └── services/
+│       ├── auth_service.dart         # Firebase Authentication
+│       └── firestore_service.dart    # Firestore database operations
+├── screenshots/                      # ⭐ App screenshots (NEW)
+└── ... (platform folders)
+```
+
+### Additional Resources
+
+- 📖 **Detailed Documentation:** See [icuisine/README.md](icuisine/README.md) for comprehensive explanations
+- 🚀 **Quick Reference:** See [QUICK_REFERENCE.md](QUICK_REFERENCE.md) for code templates and best practices
+- 📝 **Pull Request Template:** See [PULL_REQUEST_TEMPLATE.md](PULL_REQUEST_TEMPLATE.md) for submission guidelines
+
+---
+
+---
+
 ## Responsive Layout Implementation
 
 ### Overview
