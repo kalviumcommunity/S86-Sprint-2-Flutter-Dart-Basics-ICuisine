@@ -41,51 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBx0GYDsxcNwHERG5PUq_4H4WzTsTmqu6o',
-    appId: '1:721018073572:web:2d835c18e3a84ea353d7f1',
-    messagingSenderId: '721018073572',
-    projectId: 'sprint2-icuisine-project',
-    authDomain: 'sprint2-icuisine-project.firebaseapp.com',
-    storageBucket: 'sprint2-icuisine-project.firebasestorage.app',
-    measurementId: 'G-627LXVXGNC',
+    apiKey: 'AIzaSyD_rtmIFgy3AB7KfCuM1TPAMw2MyZo8Yrk',
+    appId: '1:232472544702:web:9d49715c7fbd74142365ef',
+    messagingSenderId: '232472544702',
+    projectId: 'icuisine-41831',
+    authDomain: 'icuisine-41831.firebaseapp.com',
+    storageBucket: 'icuisine-41831.firebasestorage.app',
+    measurementId: 'G-WTJ8X0SWYN',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCD0SnZGKy4oEsK_TGwWz4E8g3bBGi3vwc',
-    appId: '1:721018073572:android:12144f901bea9aa853d7f1',
-    messagingSenderId: '721018073572',
-    projectId: 'sprint2-icuisine-project',
-    storageBucket: 'sprint2-icuisine-project.firebasestorage.app',
+    apiKey: 'AIzaSyDQx2CQX1Y-lcLxk18aPfU-qlFuCDkvh-8',
+    appId: '1:232472544702:android:e02efef291c1615f2365ef',
+    messagingSenderId: '232472544702',
+    projectId: 'icuisine-41831',
+    storageBucket: 'icuisine-41831.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDwVGBhBydVecsvpuYuHPYppdksBX7vaQE',
-    appId: '1:721018073572:ios:279f4303a4bbfee553d7f1',
-    messagingSenderId: '721018073572',
-    projectId: 'sprint2-icuisine-project',
-    storageBucket: 'sprint2-icuisine-project.firebasestorage.app',
-    iosClientId: '721018073572-1bn0g7c4s158r4t5oharub7g2aa0bfpc.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAZdbs81zraC-Tjej1Y8c4-OC24aRTr78o',
+    appId: '1:232472544702:ios:195fac5a4d5089382365ef',
+    messagingSenderId: '232472544702',
+    projectId: 'icuisine-41831',
+    storageBucket: 'icuisine-41831.firebasestorage.app',
     iosBundleId: 'com.example.icuisine',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDwVGBhBydVecsvpuYuHPYppdksBX7vaQE',
-    appId: '1:721018073572:ios:279f4303a4bbfee553d7f1',
-    messagingSenderId: '721018073572',
-    projectId: 'sprint2-icuisine-project',
-    storageBucket: 'sprint2-icuisine-project.firebasestorage.app',
-    iosClientId: '721018073572-1bn0g7c4s158r4t5oharub7g2aa0bfpc.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAZdbs81zraC-Tjej1Y8c4-OC24aRTr78o',
+    appId: '1:232472544702:ios:195fac5a4d5089382365ef',
+    messagingSenderId: '232472544702',
+    projectId: 'icuisine-41831',
+    storageBucket: 'icuisine-41831.firebasestorage.app',
     iosBundleId: 'com.example.icuisine',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyBx0GYDsxcNwHERG5PUq_4H4WzTsTmqu6o',
-    appId: '1:721018073572:web:4ef2b989c499ba1353d7f1',
-    messagingSenderId: '721018073572',
-    projectId: 'sprint2-icuisine-project',
-    authDomain: 'sprint2-icuisine-project.firebaseapp.com',
-    storageBucket: 'sprint2-icuisine-project.firebasestorage.app',
-    measurementId: 'G-9X3B0VWSK9',
+    apiKey: 'AIzaSyD_rtmIFgy3AB7KfCuM1TPAMw2MyZo8Yrk',
+    appId: '1:232472544702:web:19d4ff5f6fe754ef2365ef',
+    messagingSenderId: '232472544702',
+    projectId: 'icuisine-41831',
+    authDomain: 'icuisine-41831.firebaseapp.com',
+    storageBucket: 'icuisine-41831.firebasestorage.app',
+    measurementId: 'G-JNB7J7F6C7',
   );
 
 }
