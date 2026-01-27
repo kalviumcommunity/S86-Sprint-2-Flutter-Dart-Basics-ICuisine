@@ -4,6 +4,7 @@ import 'package:icuisine/services/auth_service.dart';
 import 'package:icuisine/services/firestore_service.dart';
 import 'login_screen.dart';
 import 'stateless_stateful_demo.dart';
+import 'hot_reload_demo.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    debugPrint('📱 HomeScreen initialized - loading user data');
     _loadUserData();
   }
 
@@ -29,14 +31,16 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final user = _authService.currentUser;
       if (user != null) {
+        debugPrint('👤 Loading user data for: ${user.email}');
         final data = await _firestoreService.getUserData(user.uid);
+        debugPrint('✅ User data loaded successfully: ${data?['name']}');
         setState(() {
           _userData = data;
           _isLoadingUser = false;
         });
       }
     } catch (e) {
-      print('Error loading user data: $e');
+      debugPrint('❌ Error loading user data: $e');
       setState(() => _isLoadingUser = false);
     }
   }
@@ -209,6 +213,19 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             actions: [
+              IconButton(
+                icon: const Icon(Icons.flash_on),
+                tooltip: 'Hot Reload Demo',
+                onPressed: () {
+                  debugPrint('🚀 Navigating to Hot Reload Demo Screen');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HotReloadDemoScreen(),
+                    ),
+                  );
+                },
+              ),
               IconButton(
                 icon: const Icon(Icons.widgets),
                 tooltip: 'Widget Demo',

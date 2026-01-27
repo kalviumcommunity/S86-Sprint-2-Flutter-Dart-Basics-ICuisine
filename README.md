@@ -1291,6 +1291,671 @@ Root
 
 ---
 
+## Sprint 2 – Hot Reload, Debug Console & Flutter DevTools Demonstration
+
+### 📌 Overview
+
+This sprint demonstrates mastery of three essential Flutter development tools that dramatically improve development speed and efficiency:
+
+1. **🔥 Hot Reload** - Instantly apply code changes without restarting the app
+2. **🐛 Debug Console** - Real-time logging and runtime insights
+3. **🛠️ Flutter DevTools** - Comprehensive debugging, performance profiling, and widget inspection
+
+### 🚀 Quick Start Guide
+
+#### Step 1: Install Dependencies
+```bash
+cd icuisine
+flutter pub get
+```
+
+#### Step 2: Run the Application
+```bash
+flutter run
+```
+
+#### Step 3: Access the Hot Reload Demo Screen
+1. Once the app is running, look for the **⚡ Hot Reload Demo** button (lightning icon) in the home screen's action bar
+2. Tap it to enter the interactive demonstration screen
+
+#### Step 4: Open Debug Console
+- **VS Code**: Press `Ctrl+Shift+Y` (Windows/Linux) or `Cmd+Shift+Y` (Mac)
+- **Android Studio**: View → Debug Console
+
+#### Step 5: Launch Flutter DevTools
+```bash
+# In the flutter run terminal, press: 'p'
+# Or manually run:
+flutter pub global run devtools
+```
+
+
+---
+
+## 🔥 1. Understanding Hot Reload
+
+### What is Hot Reload?
+
+Hot Reload allows you to apply code changes to your running Flutter app **instantly**, without losing the app's state. This is one of the most powerful features for UI development.
+
+**Key Benefits:**
+- ⚡ **Speed**: Iterate on UI changes in seconds, not minutes
+- 💾 **State Preservation**: App state remains intact during reload
+- 🎨 **Immediate Feedback**: See changes as you code
+- 🧪 **Testing**: Quickly test different UI variations
+
+### How to Use Hot Reload
+
+#### Method 1: VS Code
+1. Run your app: `flutter run`
+2. Edit your Dart file
+3. Press `r` in the terminal
+4. Watch the app update instantly
+
+#### Method 2: Android Studio
+1. Run your app
+2. Edit your Dart file
+3. Click the **⚡ Hot Reload** button in the toolbar
+4. Changes appear immediately
+
+### Demo Screen Location
+**File:** `lib/screens/hot_reload_demo.dart` (350+ lines)
+
+**Features:**
+- Interactive counter with animated visual feedback
+- Color-changing buttons based on interaction state
+- Container size animation
+- Real-time state display
+- Comprehensive debugging information
+
+### Example: Change the Welcome Text
+
+Open `lib/screens/hot_reload_demo.dart` and find line ~27:
+```dart
+// Before
+String _displayText = 'Welcome to Hot Reload Demo!';
+
+// After (Edit and save - press Ctrl+S)
+String _displayText = 'Hot Reload is Amazing! 🔥';
+```
+
+Press `r` in the terminal → Text updates instantly on the screen!
+
+### Example: Change Button Colors
+
+Find line ~43:
+```dart
+// Before
+Color _buttonColor = const Color(0xFFFF6B35); // Orange
+
+// After
+Color _buttonColor = const Color(0xFF00BCD4); // Cyan
+```
+
+Press `r` → Button color changes instantly!
+
+### When Hot Reload Works
+
+✅ **Hot Reload Will Work For:**
+- UI changes (colors, text, layouts)
+- Widget property changes
+- Method implementations
+- State variable modifications
+
+❌ **Hot Reload Won't Work For:**
+- Changes to `main()` function
+- Adding/removing global variables
+- Type signature changes
+- Changes to `initState()` or class structure
+
+**When Hot Reload fails, use Hot Restart:**
+```bash
+# In the flutter run terminal, press:
+# 'R' (capital R) for Hot Restart
+# or type: 'restart'
+```
+
+---
+
+## 🐛 2. Using the Debug Console
+
+### What is the Debug Console?
+
+The Debug Console displays real-time output from your running app, including:
+- `print()` and `debugPrint()` statements
+- Flutter framework logs
+- Error messages and stack traces
+- Custom debug information
+
+### Opening the Debug Console
+
+#### VS Code
+1. Click **View** → **Debug Console**
+2. Or press `Ctrl+Shift+Y` (Windows/Linux) or `Cmd+Shift+Y` (Mac)
+
+#### Android Studio
+1. Run the app in Debug mode
+2. The Logcat window shows console output at the bottom
+
+### Using `debugPrint()` vs `print()`
+
+**Recommendation: Use `debugPrint()`**
+
+```dart
+// Import at the top
+import 'package:flutter/foundation.dart';
+
+// Good: Using debugPrint()
+debugPrint('User ID: $userId'); // Clean, formatted output
+
+// Avoid: Using print()
+print('User ID: $userId'); // May not show in some environments
+```
+
+**Why `debugPrint()` is better:**
+- Automatically formats long lines
+- Only active in debug mode
+- Better integration with DevTools
+- Avoids output truncation on some platforms
+
+### Debug Console Examples in the Demo App
+
+**In `hot_reload_demo.dart`:**
+
+```dart
+// Lifecycle logging
+@override
+void initState() {
+  super.initState();
+  debugPrint('🚀 HotReloadDemoScreen initialized');
+}
+
+// State change logging
+void _incrementCounter() {
+  setState(() {
+    _clickCount++;
+  });
+  debugPrint('📱 [HotReloadDemo] Counter incremented to $_clickCount');
+}
+
+// Cleanup logging
+@override
+void dispose() {
+  debugPrint('🛑 HotReloadDemoScreen disposed');
+  super.dispose();
+}
+```
+
+**In `home_screen.dart`:**
+
+```dart
+// Initialization logging
+@override
+void initState() {
+  super.initState();
+  debugPrint('📱 HomeScreen initialized - loading user data');
+}
+
+// Data loading logging
+Future<void> _loadUserData() async {
+  try {
+    final user = _authService.currentUser;
+    if (user != null) {
+      debugPrint('👤 Loading user data for: ${user.email}');
+      // ... load data ...
+      debugPrint('✅ User data loaded successfully: ${data?['name']}');
+    }
+  } catch (e) {
+    debugPrint('❌ Error loading user data: $e');
+  }
+}
+```
+
+### Sample Debug Console Output
+
+When you interact with the Hot Reload Demo Screen, you'll see output like:
+
+```
+🚀 HotReloadDemoScreen initialized
+📱 [HotReloadDemo] Current State:
+   - Click Count: 0
+   - Display Text: Welcome to Hot Reload Demo!
+   - Container Size: 100.0
+   - Button Color: Color(0xffff6b35)
+   - Expanded: false
+
+[After clicking Increment button]
+📱 [HotReloadDemo] Counter incremented to 1
+📱 [HotReloadDemo] Current State:
+   - Click Count: 1
+   - Display Text: Button clicked 1 time(s)!
+   - Container Size: 110.0
+   - Button Color: Color(0xfff44336)
+   - Expanded: false
+```
+
+### Tips for Effective Debugging
+
+**Use Emoji Prefixes for Quick Scanning:**
+```dart
+debugPrint('🚀 App started');           // Initialization
+debugPrint('📱 Widget built');          // UI updates
+debugPrint('👤 User logged in');        // Auth events
+debugPrint('📡 API request sent');      // Network calls
+debugPrint('💾 Data saved');            // Data operations
+debugPrint('❌ Error occurred');        // Errors
+debugPrint('✅ Success');               // Success messages
+debugPrint('⚠️ Warning');               // Warnings
+```
+
+---
+
+## 🛠️ 3. Exploring Flutter DevTools
+
+### What is Flutter DevTools?
+
+Flutter DevTools is a powerful suite of debugging and performance analysis tools that help you:
+- Inspect widget hierarchies visually
+- Profile app performance
+- Analyze memory usage
+- Monitor network requests
+- Debug layout issues
+
+### Launching DevTools
+
+#### Option 1: From Terminal (Recommended)
+
+```bash
+# In the same directory where flutter run is active
+# Press 'p' in the flutter run terminal to open DevTools in browser
+# OR manually run:
+flutter pub global activate devtools
+flutter pub global run devtools
+```
+
+#### Option 2: From VS Code Command Palette
+1. Press `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (Mac)
+2. Type "Flutter: Open DevTools"
+3. Select the option
+
+#### Option 3: From Android Studio
+1. Run the app in debug mode
+2. Look for the DevTools icon in the Run window
+
+### Key DevTools Features
+
+#### 1️⃣ **Widget Inspector** (Most Useful for UI Development)
+
+**Purpose:** Visually inspect your widget tree and examine properties
+
+**How to Use:**
+1. Open DevTools → **Inspector** tab
+2. Click the "Select Widget Mode" button (top-left of Inspector)
+3. Tap any widget in your running app
+4. See the widget tree and all its properties in the right panel
+
+**Hot Reload Demo Tips:**
+- Click on the counter circle in the Hot Reload Demo
+- Inspect the `AnimatedContainer` widget
+- See how the `width`, `height`, and `color` properties change as you interact
+- Check the `BoxDecoration` and `BoxShadow` properties
+
+**Example Inspection:**
+```
+AnimatedContainer (Highlighted)
+├── Duration: 300ms
+├── Width: 100.0 → 130.0 (grows with clicks)
+├── Height: 100.0 → 130.0
+├── Decoration:
+│   ├── Color: #FF6B35 (changes based on click count)
+│   ├── BorderRadius: 50.0
+│   └── BoxShadow: (dynamic opacity)
+└── Center
+    └── Text: "0" → "3" (counter value)
+```
+
+#### 2️⃣ **Performance Tab**
+
+**Purpose:** Monitor frame rendering performance
+
+**How to Use:**
+1. Open DevTools → **Performance** tab
+2. Click **"Record"**
+3. Interact with the app (click buttons, scroll, etc.)
+4. Click **"Stop"**
+5. Review the timeline showing:
+   - Frame render times (target: < 16.67ms for 60 FPS)
+   - Hot Reload rebuilds
+   - Animation performance
+
+**What to Look For:**
+- ✅ Frames < 16.67ms (60 FPS)
+- ⚠️ Frames > 16.67ms indicate performance issues
+- 📊 Spikes when animations start
+- 🔄 DevTools shows Hot Reload rebuilds
+
+#### 3️⃣ **Memory Tab**
+
+**Purpose:** Monitor memory usage and detect memory leaks
+
+**How to Use:**
+1. Open DevTools → **Memory** tab
+2. Click **"Record Memory"**
+3. Interact with the app
+4. Click **"Stop"**
+5. View memory allocation timeline
+
+**What to Monitor:**
+- Total memory used by your app
+- Memory spikes during operations
+- Memory freed when widgets are disposed
+- Unreleased memory (potential leaks)
+
+#### 4️⃣ **Network Tab** (For APIs & Firebase)
+
+**Purpose:** Monitor all network requests
+
+**How to Use:**
+1. Open DevTools → **Network** tab
+2. Perform actions that trigger API calls
+3. View request details:
+   - URL, method, status code
+   - Request/response headers
+   - Request/response body
+   - Response time
+
+**iCuisine App Monitoring:**
+- Firebase Authentication requests
+- Firestore data operations
+- Real-time listener updates
+
+#### 5️⃣ **Logging Tab**
+
+**Purpose:** View structured logs from your app
+
+**How to Use:**
+1. Open DevTools → **Logging** tab
+2. Observe real-time logs from `debugPrint()` statements
+3. Filter by log level (info, warning, error)
+4. Search for specific messages
+
+### DevTools + Hot Reload Workflow
+
+The ultimate developer workflow combines all three tools:
+
+```
+1. Edit Code
+       ↓
+2. Save File (Ctrl+S)
+       ↓
+3. Press 'r' (Hot Reload in terminal)
+       ↓
+4. See change in app
+       ↓
+5. Check Debug Console for logs
+       ↓
+6. Open Widget Inspector in DevTools
+       ↓
+7. Inspect updated widget properties
+       ↓
+8. Monitor Performance tab for smooth animations
+       ↓
+9. Repeat from step 1
+```
+
+---
+
+## 📸 Step-by-Step Demonstration
+
+### Step 1: Run the App
+
+```bash
+cd icuisine
+flutter pub get
+flutter run
+```
+
+### Step 2: Open Hot Reload Demo Screen
+
+1. Once app is running, tap the **⚡ Hot Reload Demo** button (lightning icon)
+2. You should see the demo screen with interactive elements
+
+### Step 3: Open Debug Console
+
+1. In VS Code, press `Ctrl+Shift+Y` to open Debug Console
+2. Notice the initialization messages:
+   ```
+   🚀 HotReloadDemoScreen initialized
+   📱 [HotReloadDemo] Current State: ...
+   ```
+
+### Step 4: Try Hot Reload
+
+1. Edit `lib/screens/hot_reload_demo.dart` line 27:
+   ```dart
+   // Change from:
+   String _displayText = 'Welcome to Hot Reload Demo!';
+   // To:
+   String _displayText = 'Hot Reload Works! 🎉';
+   ```
+
+2. Save the file (Ctrl+S)
+
+3. Press `r` in the flutter run terminal
+
+4. **Observe:**
+   - Text updates instantly on screen
+   - App state is preserved (counter remains at same value)
+   - No reload delay or screen flicker
+
+### Step 5: Open DevTools Widget Inspector
+
+1. Open a browser tab to the DevTools URL (shown in terminal)
+2. Navigate to **Inspector** tab
+3. Click "Select Widget Mode"
+4. Tap the counter circle in the app
+5. See the `AnimatedContainer` details in the Inspector panel
+
+### Step 6: Monitor Performance
+
+1. In DevTools, go to **Performance** tab
+2. Click "Record"
+3. In the app, click the "Increment" button several times
+4. Stop recording
+5. View the performance timeline showing:
+   - Each button press triggers widget rebuild
+   - Frame render times
+   - Hot Reload rebuild stamps
+
+### Step 7: Check Logs in Logging Tab
+
+1. In DevTools, go to **Logging** tab
+2. Click buttons in the app
+3. See real-time `debugPrint()` output:
+   ```
+   📱 [HotReloadDemo] Counter incremented to 1
+   📱 [HotReloadDemo] Counter incremented to 2
+   ...
+   ```
+
+---
+
+## 💡 Best Practices
+
+### Using Hot Reload Effectively
+```dart
+// ✅ Good: Small, modular state changes
+void _updateColor() {
+  setState(() {
+    _color = Colors.blue;
+  });
+}
+
+// ❌ Avoid: Major structural changes in methods
+void _rebuildEverything() {
+  // Refactoring class hierarchy - use Hot Restart instead
+}
+```
+
+### Debug Logging Best Practices
+```dart
+// ✅ Good: Structured, searchable logs
+debugPrint('🔐 [Auth] User login: ${user.email}');
+debugPrint('📊 [Analytics] Event: user_signup');
+
+// ❌ Avoid: Vague, hard-to-search logs
+print('something happened');
+print('error');
+```
+
+### DevTools Workflow
+```
+1. Code Change → Hot Reload
+2. See change in app
+3. Open Inspector → Verify widget tree
+4. Check Performance → Confirm smooth rendering
+5. Review Logging → Confirm expected behavior
+```
+
+---
+
+## 📝 Implementation Details
+
+### Files Created/Modified
+
+#### New File: `lib/screens/hot_reload_demo.dart`
+- 350+ lines of interactive demonstration code
+- No compilation errors
+- Fully functional and production-ready
+- Demonstrates all three tools in action
+
+#### Modified File: `lib/screens/home_screen.dart`
+- Added import for `hot_reload_demo.dart`
+- Added Hot Reload Demo button (⚡ icon) to AppBar actions
+- Enhanced lifecycle logging with `debugPrint()` statements
+- Improved error handling visibility
+- Changed from `print()` to `debugPrint()`
+
+---
+
+## 🎯 Key Learning Outcomes
+
+### How Hot Reload Improves Productivity
+Hot Reload eliminates the waiting time between code changes and seeing results. Instead of 30-60 second rebuild cycles, you see changes in 1-2 seconds. This accelerates UI iteration, experimentation, and debugging significantly.
+
+### Why DevTools is Useful for Debugging and Optimization
+DevTools provides:
+- **Visual widget inspection** for layout debugging
+- **Performance metrics** to identify rendering bottlenecks
+- **Memory analysis** to detect leaks
+- **Network monitoring** for API debugging
+- **Structured logging** for real-time app behavior tracking
+
+### Using These Tools in Team Development Workflow
+1. **Hot Reload:** Faster UI prototyping and code review discussions
+2. **Debug Console:** Share logs to communicate bugs clearly
+3. **DevTools:** Generate performance reports for optimization tasks
+4. **Collective Learning:** Team can learn from shared DevTools recordings
+5. **Quality Assurance:** Run performance and memory checks before release
+
+---
+
+## 🔗 Additional Resources
+
+- [Flutter Hot Reload Documentation](https://flutter.dev/docs/development/tools/hot-reload)
+- [Flutter DevTools Guide](https://flutter.dev/docs/development/tools/devtools)
+- [Debugging Flutter Apps](https://flutter.dev/docs/testing/debugging)
+- [Flutter Performance Best Practices](https://flutter.dev/docs/performance/best-practices)
+- [Widget Inspector Tutorial](https://flutter.dev/docs/development/tools/devtools/inspector)
+
+---
+
+## 📋 PR Submission Checklist
+
+Before submitting your PR:
+
+- [ ] App builds without errors: `flutter pub get && flutter run`
+- [ ] Hot Reload demo button appears in home screen
+- [ ] Debug console shows structured logs with emoji prefixes
+- [ ] DevTools opens and Widget Inspector works
+- [ ] All three tools have been demonstrated
+- [ ] Video demo recorded (1-2 minutes)
+- [ ] Video link is shareable (Anyone with link access)
+- [ ] Code compiles with no errors
+- [ ] Changes are well-documented
+
+---
+
+## 🎬 Recording a Video Demo (1-2 Minutes)
+
+### Recommended Structure
+```
+[0:00-0:10]  Opening: Show app with ⚡ button
+[0:10-0:30]  Navigate to demo screen
+[0:30-1:00]  Edit code, save, press 'r' - show instant update
+[1:00-1:20]  Show Debug Console with live logs
+[1:20-1:50]  Show DevTools Widget Inspector
+[1:50-2:00]  Summary: These tools make Flutter development fast!
+```
+
+### What to Emphasize
+- ⚡ The INSTANT nature of Hot Reload (no waiting!)
+- 💾 The preservation of app state (counter stays same)
+- 📊 The structured logging with emojis (easy to read)
+- 🔍 The visual widget inspection (no guessing)
+
+### Recommended Tools
+- **Loom** (easiest - no installation)
+- **OBS Studio** (professional control)
+- Built-in screen recording tools
+
+---
+
+## 🔧 Git Commands for PR Submission
+
+### Create Feature Branch
+```bash
+git checkout -b feat/hot-reload-devtools-demo
+```
+
+### Stage Changes
+```bash
+git add -A
+```
+
+### Commit Changes
+```bash
+git commit -m "chore: demonstrated hot reload, debug console, and DevTools usage
+
+- Created interactive hot_reload_demo.dart screen
+- Added hot reload button to home_screen navigation
+- Implemented structured debug logging throughout the app
+- Enhanced README with comprehensive DevTools guide
+- Added step-by-step demonstrations and best practices"
+```
+
+### Push to Remote
+```bash
+git push -u origin feat/hot-reload-devtools-demo
+```
+
+### PR Title
+```
+[Sprint-2] Hot Reload & DevTools Demonstration – [Your Team Name]
+```
+
+### PR Description
+Include:
+- Summary of what was implemented
+- Screenshots/video of all three tools in action
+- Reflection on benefits of each tool
+- Link to video demo
+
+---
+
 ## Getting Started
 
 (Add installation and setup instructions here)
+```
+````
+```
