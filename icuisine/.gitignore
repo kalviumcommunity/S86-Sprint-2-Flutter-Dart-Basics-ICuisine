@@ -27,11 +27,14 @@ migrate_working_dir/
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
+.flutter-plugins
 .flutter-plugins-dependencies
+.packages
 .pub-cache/
 .pub/
 /build/
 /coverage/
+pubspec.lock
 
 # Symbolication related
 app.*.symbols
@@ -43,3 +46,94 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Firebase Configuration Files (IMPORTANT - DO NOT COMMIT SENSITIVE KEYS)
+# These files contain Firebase project configuration and API keys
+# Team members should generate their own using 'flutterfire configure'
+lib/firebase_options.dart
+
+# Firebase local configuration (should NOT be committed)
+.firebase/
+**/firebase-debug.log
+**/firestore-debug.log
+**/ui-debug.log
+
+# Google Services configuration files
+# IMPORTANT: These contain your Firebase API keys and project IDs
+# Each developer should generate their own after cloning the repo
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+web/firebase-config.js
+
+# Environment variables (if you use .env files for API keys)
+.env
+.env.*
+*.env
+
+# iOS Generated files
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Runner.xcworkspace/
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# Android generated files
+**/android/.gradle/
+**/android/captures/
+**/android/gradle/wrapper/gradle-wrapper.jar
+**/android/.externalNativeBuild
+**/android/local.properties
+**/android/app/*.apk
+**/android/app/*.ap_
+**/android/app/intermediates
+**/android/app/build/
+**/android/key.properties
+
+# Web generated files
+**/web/.dart_tool/
+
+# Windows generated files
+**/windows/flutter/ephemeral/
+
+# macOS generated files
+**/macos/Flutter/ephemeral/
+**/macos/Flutter/Flutter-Generated.xcconfig
+
+# Linux generated files
+**/linux/flutter/ephemeral/
+
+# Backup files
+*.backup
+*.bak
+*.tmp
+*.temp
+
+# Database files (if using local SQLite)
+*.db
+*.sqlite
+*.sqlite3
+
+# Crash logs
+*.crash
+
+# Test coverage
+**/lcov.info
+**/coverage/
+
+# Generated source files
+**/*.g.dart
+**/*.freezed.dart
+**/*.mocks.dart
+
+# Firebase Emulator data
+firebase-emulator-data/
+*-export/
+
+# User-specific files
+.vscode/settings.json
+.vscode/launch.json
