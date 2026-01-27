@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:icuisine/services/auth_service.dart';
 import 'signup_screen.dart';
-import 'user_dashboard.dart';
+import 'home_screen.dart';
+import 'widget_tree_demo.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -44,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
         // Navigate to dashboard
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => const UserDashboard(),
+            builder: (context) => const HomeScreen(),
           ),
         );
       }
@@ -290,6 +291,23 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           ],
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Widget Tree Demo Button
+                        TextButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const WidgetTreeDemo(),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.account_tree),
+                          label: const Text('View Widget Tree Demo'),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                       ],
                     ),

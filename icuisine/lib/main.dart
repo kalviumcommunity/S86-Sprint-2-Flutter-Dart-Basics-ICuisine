@@ -4,6 +4,9 @@ import 'firebase_options.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/responsive_home.dart';
 import 'screens/login_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/widget_tree_demo.dart';
+import 'services/auth_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,8 +32,10 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Roboto',
       ),
-      // Start with login screen for Firebase authentication
-      home: const LoginScreen(),
+      // Check authentication and show appropriate screen
+      home: AuthService().currentUser != null
+          ? const HomeScreen()
+          : const LoginScreen(),
     );
   }
 }

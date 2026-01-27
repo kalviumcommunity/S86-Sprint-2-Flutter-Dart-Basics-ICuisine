@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:icuisine/services/auth_service.dart';
 import 'package:icuisine/services/firestore_service.dart';
 import 'login_screen.dart';
-import 'user_dashboard.dart';
+import 'home_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -61,7 +61,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           // Navigate to dashboard
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => const UserDashboard(),
+              builder: (context) => const HomeScreen(),
             ),
           );
         }
