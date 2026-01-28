@@ -8,6 +8,7 @@ import 'screens/settings_screen.dart';
 import 'screens/details_screen.dart';
 import 'screens/navigation_stack_screen.dart';
 import 'screens/responsive_layout.dart';
+import 'screens/scrollable_views.dart';
 import 'services/auth_service.dart';
 
 void main() async {
@@ -48,6 +49,8 @@ class MyApp extends StatelessWidget {
         '/navigation-stack': (context) => const NavigationStackScreen(),
         // Responsive layout demo
         '/responsive-layout': (context) => const ResponsiveLayout(),
+        // Scrollable views demo
+        '/scrollable-views': (context) => const ScrollableViews(),
       },
     );
   }

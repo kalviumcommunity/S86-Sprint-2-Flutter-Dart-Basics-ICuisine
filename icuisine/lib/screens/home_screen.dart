@@ -255,6 +255,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               IconButton(
+                icon: const Icon(Icons.list),
+                tooltip: 'Scrollable Views',
+                onPressed: () {
+                  debugPrint('📜 Navigating to Scrollable Views Screen');
+                  Navigator.pushNamed(context, '/scrollable-views');
+                },
+              ),
+              IconButton(
                 icon: const Icon(Icons.notifications_outlined),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
