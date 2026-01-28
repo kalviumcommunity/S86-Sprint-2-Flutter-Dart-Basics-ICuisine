@@ -247,6 +247,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               IconButton(
+                icon: const Icon(Icons.dashboard),
+                tooltip: 'Responsive Layout',
+                onPressed: () {
+                  debugPrint('📐 Navigating to Responsive Layout Screen');
+                  Navigator.pushNamed(context, '/responsive-layout');
+                },
+              ),
+              IconButton(
                 icon: const Icon(Icons.notifications_outlined),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
