@@ -214,6 +214,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             actions: [
               IconButton(
+                icon: const Icon(Icons.navigation),
+                tooltip: 'Navigation Demo',
+                onPressed: () {
+                  debugPrint('🗺️ Navigating to Navigation Demo Screen');
+                  Navigator.pushNamed(context, '/navigation-demo');
+                },
+              ),
+              IconButton(
                 icon: const Icon(Icons.flash_on),
                 tooltip: 'Hot Reload Demo',
                 onPressed: () {
@@ -259,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(16.0),
               child: StreamBuilder<QuerySnapshot>(
                 stream: isVendor
-                    ? _firestoreService.streamAllOrders()
+                    ? _firestoreService.streamVendorOrders(user?.uid ?? '')
                     : _firestoreService.streamUserOrders(user?.uid ?? ''),
                 builder: (context, snapshot) {
                   int totalOrders = 0;
@@ -372,11 +380,11 @@ class _HomeScreenState extends State<HomeScreen> {
           StreamBuilder<QuerySnapshot>(
             stream: _selectedFilter == 'all'
                 ? (isVendor
-                    ? _firestoreService.streamAllOrders()
+                    ? _firestoreService.streamVendorOrders(user?.uid ?? '')
                     : _firestoreService.streamUserOrders(user?.uid ?? ''))
                 : (isVendor
-                    ? _firestoreService.streamOrdersByStatus(_selectedFilter)
-                    : _firestoreService.streamUserOrders(user?.uid ?? '')),
+                    ? _firestoreService.streamVendorOrders(user?.uid ?? '')
+                    : _firestoreService.streamUserOrdersByStatus(user?.uid ?? '', _selectedFilter)),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const SliverFillRemaining(
@@ -689,12 +697,15 @@ class _HomeScreenState extends State<HomeScreen> {
               if (descController.text.isNotEmpty && totalController.text.isNotEmpty) {
                 try {
                   final user = _authService.currentUser;
-                  await _firestoreService.addOrder({
-                    'userId': user?.uid ?? '',
-                    'userName': _userData?['name'] ?? 'Unknown',
-                    'description': descController.text,
-                    'total': double.tryParse(totalController.text) ?? 0.0,
-                  });
+                  await _firestoreService.addOrder(
+                    user?.uid ?? '',
+                    {
+                      'userId': user?.uid ?? '',
+                      'userName': _userData?['name'] ?? 'Unknown',
+                      'description': descController.text,
+                      'total': double.tryParse(totalController.text) ?? 0.0,
+                    },
+                  );
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -766,7 +777,8 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ElevatedButton.icon(
                 onPressed: () async {
                   Navigator.pop(context);
-                  await _firestoreService.deleteOrder(orderId);
+                  final user = _authService.currentUser;
+                  await _firestoreService.deleteOrder(orderId, user?.uid ?? '');
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Order deleted'),
@@ -824,7 +836,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ? null
           : () async {
               try {
-                await _firestoreService.updateOrder(orderId, {'status': newStatus});
+                final user = _authService.currentUser;
+                await _firestoreService.updateOrder(orderId, user?.uid ?? '', {'status': newStatus});
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
