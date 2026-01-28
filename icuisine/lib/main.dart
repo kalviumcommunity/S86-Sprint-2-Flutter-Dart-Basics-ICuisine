@@ -3,6 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/navigation_demo.dart';
+import 'screens/settings_screen.dart';
+import 'screens/details_screen.dart';
+import 'screens/navigation_stack_screen.dart';
 import 'services/auth_service.dart';
 
 void main() async {
@@ -29,10 +33,19 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Roboto',
       ),
-      // Check authentication and show appropriate screen
-      home: AuthService().currentUser != null
-          ? const HomeScreen()
-          : const LoginScreen(),
+      // Named routes configuration
+      initialRoute: '/',
+      routes: {
+        // Home screen (initial route)
+        '/': (context) => AuthService().currentUser != null
+            ? const HomeScreen()
+            : const LoginScreen(),
+        // Navigation demo screens
+        '/navigation-demo': (context) => const NavigationDemoScreen(),
+        '/settings': (context) => const SettingsScreen(),
+        '/details': (context) => const DetailsScreen(),
+        '/navigation-stack': (context) => const NavigationStackScreen(),
+      },
     );
   }
 }
