@@ -7,6 +7,7 @@ import 'screens/navigation_demo.dart';
 import 'screens/settings_screen.dart';
 import 'screens/details_screen.dart';
 import 'screens/navigation_stack_screen.dart';
+import 'screens/responsive_layout.dart';
 import 'services/auth_service.dart';
 
 void main() async {
@@ -45,6 +46,8 @@ class MyApp extends StatelessWidget {
         '/settings': (context) => const SettingsScreen(),
         '/details': (context) => const DetailsScreen(),
         '/navigation-stack': (context) => const NavigationStackScreen(),
+        // Responsive layout demo
+        '/responsive-layout': (context) => const ResponsiveLayout(),
       },
     );
   }

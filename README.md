@@ -1953,6 +1953,234 @@ Include:
 
 ---
 
+## 📐 Sprint 2 – Responsive Layout Design
+
+### Overview
+Building responsive layouts that adapt seamlessly to different screen sizes is crucial for mobile applications. This sprint demonstrates how to use **Rows**, **Columns**, and **Containers** to create flexible, adaptive UI layouts.
+
+### What We Implemented
+
+**Location:** `lib/screens/responsive_layout.dart`
+
+A comprehensive responsive layout demonstration featuring:
+
+#### 🎯 Core Layout Widgets
+
+1. **Container** - Flexible box for styling and spacing
+   - Gradient backgrounds
+   - Padding and margin control
+   - Border radius and decoration
+   ```dart
+   Container(
+     padding: EdgeInsets.all(20),
+     decoration: BoxDecoration(
+       gradient: LinearGradient(colors: [Colors.deepOrange, Colors.orangeAccent]),
+       borderRadius: BorderRadius.circular(12),
+     ),
+     child: Text('Header Section'),
+   );
+   ```
+
+2. **Row** - Horizontal layout arrangement
+   - `mainAxisAlignment` for spacing control
+   - `crossAxisAlignment` for vertical alignment
+   - Perfect for headers, navigation bars, and side-by-side content
+   ```dart
+   Row(
+     mainAxisAlignment: MainAxisAlignment.spaceAround,
+     children: [
+       Icon(Icons.phone_android),
+       Icon(Icons.height),
+       Icon(Icons.person),
+     ],
+   );
+   ```
+
+3. **Column** - Vertical layout stacking
+   - Organizes widgets vertically
+   - Common for forms, feeds, and card layouts
+   - Combines with Row for complex grids
+   ```dart
+   Column(
+     crossAxisAlignment: CrossAxisAlignment.start,
+     children: [
+       Text('Welcome'),
+       SizedBox(height: 16),
+       ElevatedButton(onPressed: () {}, child: Text('Continue')),
+     ],
+   );
+   ```
+
+#### 📱 Responsive Features
+
+1. **Screen Detection** - Uses `MediaQuery` to detect:
+   - Screen width and height
+   - Device orientation (portrait/landscape)
+   - Display information in real-time
+
+2. **Adaptive Layouts:**
+   - **Portrait Mode** - Stacked vertical layout (Column-based)
+   - **Landscape Mode** - Side-by-side layout (Row-based with Expanded)
+   - Automatic switching based on device orientation
+
+3. **Flexible Sizing:**
+   - `Expanded` widgets for proportional resizing
+   - Flex ratios for custom proportions (flex: 2)
+   - Responsive card grids with dynamic column counts
+
+4. **Layout Components:**
+   - Header section with gradient and branding
+   - Screen info display (width, height, orientation)
+   - Main content area with two-column layout
+   - Feature cards grid (2-4 columns based on screen size)
+   - Footer section with responsive tips
+
+#### 🧪 Testing Across Screen Sizes
+
+The app automatically adapts to:
+- **Small phones** (< 600px) - 2-column card layout, stacked sections
+- **Standard phones** (600-900px) - 3-column card layout, side panels visible
+- **Tablets** (> 900px) - 4-column card layout, full landscape support
+
+### 🔑 Key Concepts
+
+| Concept | Usage | Benefit |
+|---------|-------|---------|
+| **MediaQuery** | Get screen dimensions | Responsive decisions |
+| **Expanded** | Fill available space | Proportional layouts |
+| **Row/Column** | Direction-based layout | Flexible UI organization |
+| **Container** | Style and position | Consistent spacing |
+| **Wrap** | Responsive grid | Auto-wrapping cards |
+
+### 📸 Visual Demonstration
+
+The layout includes:
+1. **Header** - Full-width gradient container
+2. **Screen Info** - Current dimensions and orientation display
+3. **Content Area** - Adapts between portrait (stacked) and landscape (side-by-side)
+4. **Feature Cards** - Responsive grid with icon and label
+5. **Footer** - Best practices tips
+
+### 💡 Reflection on Responsive Design
+
+**Why Responsiveness Matters:**
+- Different users have different devices (phones, tablets, desktops)
+- Poor responsive design leads to broken UI, unreadable text, and user frustration
+- Good responsive design ensures consistent, professional appearance across all devices
+
+**Challenges Faced:**
+- Managing layout proportions across very different screen sizes
+- Avoiding text overflow and widget clipping
+- Balancing flexibility with design consistency
+- Handling orientation changes smoothly
+
+**Improvements Made:**
+- Used `Expanded` and `Flexible` for automatic sizing
+- Implemented `MediaQuery` for conditional layouts
+- Created responsive card grids with `Wrap` widget
+- Added visual feedback showing current screen dimensions
+- Tested on multiple screen sizes (portrait, landscape, various widths)
+
+**Best Practices Applied:**
+1. Always use `Expanded` to fill available space
+2. Test both portrait and landscape orientations
+3. Use `MediaQuery` for major layout decisions
+4. Add padding/margin for breathing room
+5. Test on actual devices when possible
+
+### 🚀 How to Access
+
+1. Run the app: `flutter run -d chrome`
+2. Click the **Dashboard icon** (📊) in the home screen AppBar
+3. Rotate device or resize browser to see responsive behavior
+4. Observe how the layout adapts in real-time
+
+### 📚 Code Snippets
+
+**Portrait Mode (Mobile):**
+```dart
+Column(
+  children: [
+    // Main content (full width)
+    Container(width: double.infinity, ...),
+    SizedBox(height: 12),
+    // Sidebar (full width below)
+    Container(width: double.infinity, ...),
+  ],
+)
+```
+
+**Landscape Mode (Tablet):**
+```dart
+Row(
+  children: [
+    Expanded(flex: 2, child: // Main content),
+    SizedBox(width: 12),
+    Expanded(flex: 1, child: // Sidebar),
+  ],
+)
+```
+
+**Responsive Card Grid:**
+```dart
+int columns = screenWidth > 900 ? 4 : (screenWidth > 600 ? 3 : 2);
+Wrap(
+  spacing: 12,
+  children: List.generate(features.length, (i) {
+    return Container(
+      width: (screenWidth - 32 - 12 * (columns - 1)) / columns,
+      // Card content
+    );
+  }),
+)
+```
+
+---
+
+## 🔧 Git Commands for PR Submission
+
+### Create Feature Branch
+```bash
+git checkout -b feat/responsive-layout-design
+```
+
+### Stage Changes
+```bash
+git add -A
+```
+
+### Commit Changes
+```bash
+git commit -m "feat: designed responsive layout using rows, columns, and containers
+
+- Created responsive_layout.dart with Container, Row, and Column widgets
+- Implemented portrait (stacked) and landscape (side-by-side) layouts
+- Added screen dimension detection with MediaQuery
+- Built responsive feature card grid with dynamic columns
+- Integrated navigation from home_screen dashboard
+- Tested across different screen sizes and orientations"
+```
+
+### Push to Remote
+```bash
+git push -u origin feat/responsive-layout-design
+```
+
+### PR Title
+```
+[Sprint-2] Responsive Layout Design – [Your Team Name]
+```
+
+### PR Description
+Include:
+- Summary: Created a responsive layout demonstrating Row, Column, and Container widgets
+- Screenshots of the app in portrait and landscape modes
+- Screenshots showing how layout adapts on small (phone) and large (tablet) screens
+- Reflection on responsiveness importance and challenges faced
+- Link to video demo (if available)
+
+---
+
 ## Getting Started
 
 (Add installation and setup instructions here)
