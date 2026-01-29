@@ -6,6 +6,7 @@ import 'login_screen.dart';
 import 'user_input_form.dart';
 import 'stateless_stateful_demo.dart';
 import 'hot_reload_demo.dart';
+import 'state_management_demo.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -214,6 +215,18 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             actions: [
+              IconButton(
+                icon: const Icon(Icons.science_outlined),
+                tooltip: 'State Management Demo',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const StateManagementDemo(),
+                    ),
+                  );
+                },
+              ),
               IconButton(
                 icon: const Icon(Icons.feedback_outlined),
                 tooltip: 'Feedback Form',

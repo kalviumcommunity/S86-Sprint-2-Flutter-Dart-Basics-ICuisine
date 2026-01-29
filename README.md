@@ -3849,6 +3849,391 @@ Status: ✅ Complete
 
 ---
 
+## 🔄 Sprint 2 – State Management with setState()
+
+### Overview
+State management is the foundation of dynamic user interfaces in Flutter. This lesson teaches you how to use `setState()` to build reactive screens where data changes in real time. The demo shows how pressing buttons instantly updates the UI, demonstrating Flutter's declarative programming model.
+
+### What We Implemented
+
+#### 🎯 State Management Demo Screen
+
+**Location:** `lib/screens/state_management_demo.dart` (420+ lines)
+
+A comprehensive interactive counter application demonstrating:
+
+**Core State Management Concepts:**
+- ✅ **Local State Management** - Using `setState()` to manage widget state
+- ✅ **Reactive UI Updates** - Immediate visual feedback on user interactions
+- ✅ **State-Driven Logic** - UI adapts based on current state values
+- ✅ **Conditional Rendering** - Different UI elements based on state
+
+**Interactive Features:**
+- 🔢 **Counter Widget** - Increment/Decrement/Reset with real-time display
+- 🎨 **Dynamic Background Colors** - 5 different color schemes based on count
+- 😊 **Animated Icons** - Icon changes reflect count milestones
+- 🟢🟠 **Even/Odd Badge** - Real-time parity indicator
+- 💬 **Motivational Messages** - Context-aware messages at different counts
+- 📊 **Live Statistics** - Total clicks, number type, and level tracking
+- ✨ **Smooth Animations** - AnimatedContainer and AnimatedSwitcher widgets
+
+### How to Access the Demo
+
+1. **Run the app:** `flutter run -d chrome`
+2. **Login** to the application
+3. **Tap the science flask icon** (🧪) in the app bar
+4. **Interact** with the counter using increment/decrement buttons
+
+### Key Concepts Demonstrated
+
+#### StatefulWidget vs StatelessWidget
+
+| Aspect | StatelessWidget | StatefulWidget |
+|--------|----------------|----------------|
+| **State** | Immutable, cannot change | Mutable, can change over time |
+| **Rebuild** | Only when parent changes | When setState() is called |
+| **Use Case** | Static content (labels, icons) | Dynamic content (forms, counters) |
+| **Performance** | Lighter, more efficient | Slightly heavier due to state |
+| **Example** | Text, Icon, Container | TextField, Checkbox, Counter |
+
+#### setState() Method Explained
+
+```dart
+class _StateManagementDemoState extends State<StateManagementDemo> {
+  // State variables - these can change over time
+  int _counter = 0;
+  bool _isEven = true;
+  Color _backgroundColor = Colors.white;
+
+  // Method that modifies state and triggers rebuild
+  void _incrementCounter() {
+    setState(() {
+      // Update state variables inside setState()
+      _counter++;
+      _isEven = _counter % 2 == 0;
+      
+      // Conditional state updates based on counter value
+      if (_counter >= 5) {
+        _backgroundColor = Colors.green[50]!;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // UI automatically rebuilds when setState() is called
+    return Scaffold(
+      body: Container(
+        color: _backgroundColor, // Uses current state
+        child: Column(
+          children: [
+            Text('Count: $_counter'), // Displays current counter
+            Text(_isEven ? 'EVEN' : 'ODD'), // Conditional text
+            ElevatedButton(
+              onPressed: _incrementCounter, // Triggers state change
+              child: const Text('Increment'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+**How setState() Works:**
+1. ✅ You call `setState(() { ... })` with a function
+2. ✅ Inside the function, you update state variables
+3. ✅ Flutter marks this widget as dirty (needs rebuild)
+4. ✅ The `build()` method runs again with new state values
+5. ✅ Only this widget and its children rebuild (efficient!)
+6. ✅ UI instantly reflects the new state
+
+#### State-Driven UI Logic
+
+The demo shows multiple ways state controls the UI:
+
+```dart
+// 1. Conditional Colors
+Color _backgroundColor = _counter >= 5 
+    ? Colors.green[50]! 
+    : Colors.blue[50]!;
+
+// 2. Conditional Icons
+IconData _icon = _counter == 0 
+    ? Icons.sentiment_neutral 
+    : _counter < 10 
+        ? Icons.sentiment_satisfied 
+        : Icons.celebration;
+
+// 3. Conditional Messages
+String _message = _counter < 5 
+    ? 'Keep going!' 
+    : _counter < 15 
+        ? 'You\'re on fire! 🔥' 
+        : 'Amazing! You\'re a champion! 🏆';
+
+// 4. Conditional Button States
+ElevatedButton(
+  onPressed: _counter > 0 ? _decrementCounter : null, // Disabled at 0
+  child: const Text('Decrement'),
+)
+
+// 5. Dynamic Text Content
+Text(_isEven ? 'EVEN' : 'ODD')
+```
+
+### Navigation Integration
+
+Added a science flask icon to the Home Screen app bar:
+
+```dart
+// lib/screens/home_screen.dart
+actions: [
+  IconButton(
+    icon: const Icon(Icons.science_outlined),
+    tooltip: 'State Management Demo',
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const StateManagementDemo(),
+        ),
+      );
+    },
+  ),
+  // ... other icons
+],
+```
+
+### Learning Outcomes
+
+#### Why setState() is Essential
+
+1. **Real-Time Updates** 📊
+   - User actions immediately reflect in UI
+   - No page refresh needed
+   - Creates responsive, interactive experiences
+
+2. **Declarative Programming** 🎯
+   - You describe what UI should look like for each state
+   - Flutter handles the efficient update process
+   - Reduces imperative DOM manipulation
+
+3. **Local State Management** 🏠
+   - Perfect for widget-specific state
+   - No external state management library needed
+   - Simple and performant for local changes
+
+4. **Predictable UI** ✅
+   - State determines UI = easier debugging
+   - Same state always produces same UI
+   - Clear cause-and-effect relationship
+
+#### When to Use setState()
+
+**✅ Good Use Cases:**
+- Form inputs and validation
+- Toggle switches and checkboxes
+- Counters and timers
+- Showing/hiding content
+- Button loading states
+- Local animations
+- Tab/page selection
+
+**❌ Not Ideal For:**
+- State shared across many screens (use Provider, Bloc, Riverpod)
+- Complex state logic with many dependencies
+- State that needs to persist across app restarts
+- State synced with backend/database
+
+### Best Practices Demonstrated
+
+1. ✅ **Always call setState() when modifying state**
+   ```dart
+   // ❌ WRONG - UI won't update
+   void _increment() {
+     _counter++;
+   }
+
+   // ✅ CORRECT - UI updates immediately
+   void _increment() {
+     setState(() {
+       _counter++;
+     });
+   }
+   ```
+
+2. ✅ **Keep setState() calls minimal and focused**
+   ```dart
+   // ❌ WRONG - Heavy computation inside setState
+   setState(() {
+     _data = heavyComputation(); // Blocks UI thread
+   });
+
+   // ✅ CORRECT - Compute first, then setState
+   final result = heavyComputation();
+   setState(() {
+     _data = result;
+   });
+   ```
+
+3. ✅ **Use private state variables with underscore prefix**
+   ```dart
+   int _counter = 0;  // Private to this State class
+   bool _isEven = true;
+   ```
+
+4. ✅ **Initialize state in the State class, not build()**
+   ```dart
+   class _DemoState extends State<Demo> {
+     int _counter = 0; // ✅ Initialize here
+     
+     @override
+     Widget build(BuildContext context) {
+       // ❌ Don't initialize state in build()
+       return ...;
+     }
+   }
+   ```
+
+5. ✅ **Group related state updates in one setState() call**
+   ```dart
+   setState(() {
+     _counter++;
+     _isEven = _counter % 2 == 0;
+     _message = _getMessageForCount(_counter);
+   });
+   ```
+
+### Code Structure
+
+```dart
+// 1. StatefulWidget Class (Widget Configuration)
+class StateManagementDemo extends StatefulWidget {
+  const StateManagementDemo({super.key});
+
+  @override
+  State<StateManagementDemo> createState() => _StateManagementDemoState();
+}
+
+// 2. State Class (Widget Logic & State)
+class _StateManagementDemoState extends State<StateManagementDemo> {
+  // State variables
+  int _counter = 0;
+  bool _isEven = true;
+  
+  // State-modifying methods
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+      _updateUIState();
+    });
+  }
+  
+  void _updateUIState() {
+    _isEven = _counter % 2 == 0;
+    // Update other dependent state
+  }
+  
+  // Build method - called when setState() is triggered
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // UI that uses current state values
+    );
+  }
+}
+```
+
+### Testing Guidelines
+
+Test these scenarios in the demo:
+
+1. ✅ **Increment Counter**
+   - Tap increment button
+   - Verify count increases by 1
+   - Verify background color changes at milestones
+
+2. ✅ **Decrement Counter**
+   - Tap decrement button when counter > 0
+   - Verify count decreases by 1
+   - Verify button is disabled at 0
+
+3. ✅ **Reset Counter**
+   - Click reset icon in app bar
+   - Verify counter returns to 0
+   - Verify UI resets to initial state
+
+4. ✅ **Even/Odd Badge**
+   - Increment through various counts
+   - Verify badge shows correct parity
+   - Verify badge colors change appropriately
+
+5. ✅ **Conditional UI Changes**
+   - Count 0-4: Blue background, neutral icon
+   - Count 5-9: Green background, happy icon
+   - Count 10-14: Orange background, excited icon
+   - Count 15+: Purple background, celebration icon
+
+6. ✅ **Message Updates**
+   - Verify motivational message changes at thresholds
+   - Check message matches current count range
+
+7. ✅ **Animations**
+   - Verify smooth color transitions
+   - Verify counter number scales in/out
+   - Verify icon changes animate smoothly
+
+### Reflection Questions
+
+1. **What is the difference between StatelessWidget and StatefulWidget?**
+   - StatelessWidget: Immutable, no internal state, rebuild only when parent changes
+   - StatefulWidget: Mutable, has internal state, rebuilds when setState() is called
+
+2. **Why must state modifications happen inside setState()?**
+   - setState() tells Flutter the widget is "dirty" and needs rebuilding
+   - Without it, state changes won't trigger UI updates
+   - It ensures the build() method runs with new state values
+
+3. **What happens when you call setState()?**
+   - Executes the function passed to it (updates state variables)
+   - Marks the widget as needing rebuild
+   - Schedules a call to build() method
+   - Flutter efficiently updates only changed parts of the UI
+
+4. **When would setState() NOT be the best choice for state management?**
+   - When state needs to be shared across multiple screens
+   - When state has complex dependencies and logic
+   - When state needs to persist across app sessions
+   - When many widgets far apart in the tree need the same state
+
+5. **How does Flutter know which widgets to rebuild?**
+   - Only the widget whose setState() was called and its descendants rebuild
+   - Flutter compares new widget tree with old one (reconciliation)
+   - Only actual differences are updated in the UI (efficient!)
+
+### Screenshots
+
+(Take screenshots showing):
+- Counter at 0 with neutral icon and blue background
+- Counter at 5 with happy icon and green background
+- Counter at 15+ with celebration icon and purple background
+- Even/Odd badge in both states
+- Disabled decrement button at count 0
+
+### Additional Features Demonstrated
+
+1. **AnimatedContainer** - Smooth background color transitions
+2. **AnimatedSwitcher** - Counter number and message animations
+3. **Conditional Styling** - Dynamic colors, icons, and text
+4. **Disabled States** - Button disabled when counter is 0
+5. **Statistics Display** - Real-time level calculation
+6. **Icon Variations** - 5 different icons based on progress
+7. **Tooltip Guidance** - Help text on reset button
+
+---
+
 ## Getting Started
 
 ### Prerequisites
