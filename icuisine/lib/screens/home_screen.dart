@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icuisine/services/auth_service.dart';
 import 'package:icuisine/services/firestore_service.dart';
 import 'login_screen.dart';
+import 'user_input_form.dart';
 import 'stateless_stateful_demo.dart';
 import 'hot_reload_demo.dart';
 
@@ -214,56 +215,20 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             actions: [
               IconButton(
-                icon: const Icon(Icons.navigation),
-                tooltip: 'Navigation Demo',
-                onPressed: () {
-                  debugPrint('🗺️ Navigating to Navigation Demo Screen');
-                  Navigator.pushNamed(context, '/navigation-demo');
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.flash_on),
-                tooltip: 'Hot Reload Demo',
-                onPressed: () {
-                  debugPrint('🚀 Navigating to Hot Reload Demo Screen');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HotReloadDemoScreen(),
-                    ),
-                  );
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.widgets),
-                tooltip: 'Widget Demo',
+                icon: const Icon(Icons.feedback_outlined),
+                tooltip: 'Feedback Form',
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const StatelessStatefulDemo(),
+                      builder: (context) => const UserInputForm(),
                     ),
                   );
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.dashboard),
-                tooltip: 'Responsive Layout',
-                onPressed: () {
-                  debugPrint('📐 Navigating to Responsive Layout Screen');
-                  Navigator.pushNamed(context, '/responsive-layout');
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.list),
-                tooltip: 'Scrollable Views',
-                onPressed: () {
-                  debugPrint('📜 Navigating to Scrollable Views Screen');
-                  Navigator.pushNamed(context, '/scrollable-views');
                 },
               ),
               IconButton(
                 icon: const Icon(Icons.notifications_outlined),
+                tooltip: 'Notifications',
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('No new notifications')),
@@ -272,6 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               IconButton(
                 icon: const Icon(Icons.logout),
+                tooltip: 'Logout',
                 onPressed: _logout,
               ),
             ],

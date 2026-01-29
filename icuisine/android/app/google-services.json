@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "232472544702",
-    "project_id": "icuisine-41831",
-    "storage_bucket": "icuisine-41831.firebasestorage.app"
+    "project_number": "993574389886",
+    "project_id": "concept-2-be0a8",
+    "storage_bucket": "concept-2-be0a8.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:232472544702:android:e02efef291c1615f2365ef",
+        "mobilesdk_app_id": "1:993574389886:android:30bb4c8d074372eb78702f",
         "android_client_info": {
           "package_name": "com.example.icuisine"
         }
@@ -15,7 +15,26 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDQx2CQX1Y-lcLxk18aPfU-qlFuCDkvh-8"
+          "current_key": "AIzaSyAiAuu_9p6gGTmnmaPuBMCp4-cWQCPZsLk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993574389886:android:67ee96f2ec6cbfde78702f",
+        "android_client_info": {
+          "package_name": "com.example.learning_concept2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiAuu_9p6gGTmnmaPuBMCp4-cWQCPZsLk"
         }
       ],
       "services": {
