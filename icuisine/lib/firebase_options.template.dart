@@ -6,6 +6,11 @@ import 'package:flutter/foundation.dart'
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
+/// IMPORTANT: This is a TEMPLATE file. Copy this to firebase_options.dart
+/// and fill in your own Firebase configuration values.
+///
+/// DO NOT commit firebase_options.dart to version control!
+///
 /// Example:
 /// ```dart
 /// import 'firebase_options.dart';
@@ -41,49 +46,48 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD_rtmIFgy3AB7KfCuM1TPAMw2MyZo8Yrk',
-    appId: '1:232472544702:web:9d49715c7fbd74142365ef',
-    messagingSenderId: '232472544702',
-    projectId: 'icuisine-41831',
-    authDomain: 'icuisine-41831.firebaseapp.com',
-    storageBucket: 'icuisine-41831.firebasestorage.app',
-    measurementId: 'G-WTJ8X0SWYN',
+    apiKey: 'YOUR_WEB_API_KEY_HERE',
+    appId: 'YOUR_WEB_APP_ID_HERE',
+    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID_HERE',
+    projectId: 'YOUR_PROJECT_ID_HERE',
+    authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
+    storageBucket: 'YOUR_PROJECT_ID.firebasestorage.app',
+    measurementId: 'YOUR_MEASUREMENT_ID_HERE',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDQx2CQX1Y-lcLxk18aPfU-qlFuCDkvh-8',
-    appId: '1:232472544702:android:e02efef291c1615f2365ef',
-    messagingSenderId: '232472544702',
-    projectId: 'icuisine-41831',
-    storageBucket: 'icuisine-41831.firebasestorage.app',
+    apiKey: 'YOUR_ANDROID_API_KEY_HERE',
+    appId: 'YOUR_ANDROID_APP_ID_HERE',
+    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID_HERE',
+    projectId: 'YOUR_PROJECT_ID_HERE',
+    storageBucket: 'YOUR_PROJECT_ID.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAZdbs81zraC-Tjej1Y8c4-OC24aRTr78o',
-    appId: '1:232472544702:ios:195fac5a4d5089382365ef',
-    messagingSenderId: '232472544702',
-    projectId: 'icuisine-41831',
-    storageBucket: 'icuisine-41831.firebasestorage.app',
+    apiKey: 'YOUR_IOS_API_KEY_HERE',
+    appId: 'YOUR_IOS_APP_ID_HERE',
+    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID_HERE',
+    projectId: 'YOUR_PROJECT_ID_HERE',
+    storageBucket: 'YOUR_PROJECT_ID.firebasestorage.app',
     iosBundleId: 'com.example.icuisine',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAZdbs81zraC-Tjej1Y8c4-OC24aRTr78o',
-    appId: '1:232472544702:ios:195fac5a4d5089382365ef',
-    messagingSenderId: '232472544702',
-    projectId: 'icuisine-41831',
-    storageBucket: 'icuisine-41831.firebasestorage.app',
+    apiKey: 'YOUR_MACOS_API_KEY_HERE',
+    appId: 'YOUR_MACOS_APP_ID_HERE',
+    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID_HERE',
+    projectId: 'YOUR_PROJECT_ID_HERE',
+    storageBucket: 'YOUR_PROJECT_ID.firebasestorage.app',
     iosBundleId: 'com.example.icuisine',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyD_rtmIFgy3AB7KfCuM1TPAMw2MyZo8Yrk',
-    appId: '1:232472544702:web:19d4ff5f6fe754ef2365ef',
-    messagingSenderId: '232472544702',
-    projectId: 'icuisine-41831',
-    authDomain: 'icuisine-41831.firebaseapp.com',
-    storageBucket: 'icuisine-41831.firebasestorage.app',
-    measurementId: 'G-JNB7J7F6C7',
+    apiKey: 'YOUR_WINDOWS_API_KEY_HERE',
+    appId: 'YOUR_WINDOWS_APP_ID_HERE',
+    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID_HERE',
+    projectId: 'YOUR_PROJECT_ID_HERE',
+    authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
+    storageBucket: 'YOUR_PROJECT_ID.firebasestorage.app',
+    measurementId: 'YOUR_MEASUREMENT_ID_HERE',
   );
-
 }
