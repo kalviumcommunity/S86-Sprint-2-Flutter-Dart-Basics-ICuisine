@@ -129,7 +129,7 @@ class ResponsiveLayout extends StatelessWidget {
           Column(
             children: [
               Icon(
-                isPortrait ? Icons.phone_in_portrait : Icons.phone_in_landscape,
+                isPortrait ? Icons.phone_android : Icons.phone_android,
                 color: Colors.blue,
                 size: 24,
               ),

@@ -338,3 +338,363 @@ By completing this sprint, we've learned:
 
 **Made with ❤️ using Flutter**
 
+---
+
+## 📜 Scrollable Views: ListView and GridView
+
+### Overview
+
+This section demonstrates how to work with scrollable layouts in Flutter using **ListView** and **GridView** widgets. These are essential for displaying dynamic content like product catalogs, chat lists, photo galleries, and more.
+
+---
+
+### 🎯 Key Scrollable Widgets
+
+#### ListView - For List-Based Content
+
+**ListView** displays widgets in a scrollable vertical or horizontal list. It's perfect for:
+- Contact lists
+- Chat messages
+- News feeds
+- Menu items
+
+**Basic ListView Example:**
+
+```dart
+ListView(
+  children: [
+    ListTile(
+      leading: Icon(Icons.person),
+      title: Text('User 1'),
+      subtitle: Text('Online'),
+    ),
+    ListTile(
+      leading: Icon(Icons.person),
+      title: Text('User 2'),
+      subtitle: Text('Offline'),
+    ),
+  ],
+);
+```
+
+**Optimized ListView.builder:**
+
+For performance with large lists, use `ListView.builder`:
+
+```dart
+ListView.builder(
+  itemCount: 20,
+  itemBuilder: (context, index) {
+    return ListTile(
+      leading: CircleAvatar(child: Text('${index + 1}')),
+      title: Text('Item $index'),
+      subtitle: Text('Description of item $index'),
+    );
+  },
+);
+```
+
+**Why use .builder()?**
+- Creates items on demand
+- Only renders visible items
+- Improves memory efficiency
+- Better performance for large datasets
+
+---
+
+#### GridView - For Grid Layouts
+
+**GridView** arranges widgets in a scrollable grid pattern. Perfect for:
+- Image galleries
+- Product showcases
+- Dashboard tiles
+- App launchers
+
+**Basic GridView Example:**
+
+```dart
+GridView.count(
+  crossAxisCount: 2,
+  crossAxisSpacing: 10,
+  mainAxisSpacing: 10,
+  children: [
+    Container(color: Colors.teal, child: Center(child: Text('1'))),
+    Container(color: Colors.orange, child: Center(child: Text('2'))),
+    Container(color: Colors.blue, child: Center(child: Text('3'))),
+    Container(color: Colors.purple, child: Center(child: Text('4'))),
+  ],
+);
+```
+
+**Optimized GridView.builder:**
+
+```dart
+GridView.builder(
+  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: 2,
+    crossAxisSpacing: 8,
+    mainAxisSpacing: 8,
+  ),
+  itemCount: 8,
+  itemBuilder: (context, index) {
+    return Container(
+      color: Colors.primaries[index % Colors.primaries.length],
+      child: Center(
+        child: Text(
+          'Tile $index',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  },
+);
+```
+
+---
+
+### 🎨 Demo Implementation
+
+Our [scrollable_views.dart](lib/screens/scrollable_views.dart) screen features:
+
+#### Tab 1: ListView Examples
+- **Vertical ListView**: Scrollable list with cards and avatars
+- **Horizontal ListView**: Swipeable menu items with icons
+
+#### Tab 2: GridView Examples
+- **2-Column Grid**: Responsive grid layout
+- **3-Column Grid**: Dense grid display
+
+#### Tab 3: Combined Layout
+- Horizontal scrolling list of featured items
+- Vertical grid of popular products
+- Single scrollable container combining both
+
+**Code Snippet from Combined Layout:**
+
+```dart
+SingleChildScrollView(
+  child: Column(
+    children: [
+      // Horizontal ListView
+      Container(
+        height: 180,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: menuItems.length,
+          itemBuilder: (context, index) {
+            return Container(
+              width: 140,
+              margin: EdgeInsets.symmetric(horizontal: 8),
+              decoration: BoxDecoration(
+                color: Colors.primaries[index % Colors.primaries.length],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(child: Text(menuItems[index])),
+            );
+          },
+        ),
+      ),
+      
+      // GridView
+      GridView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+        ),
+        itemCount: 8,
+        itemBuilder: (context, index) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.primaries[index % Colors.primaries.length],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Center(child: Text('Item ${index + 1}')),
+          );
+        },
+      ),
+    ],
+  ),
+);
+```
+
+---
+
+### 📸 Screenshots
+
+#### ListView Tab
+![ListView Demo](screenshots/listview_demo.png)
+*Vertical and horizontal scrolling lists with interactive items*
+
+#### GridView Tab
+![GridView Demo](screenshots/gridview_demo.png)
+*2-column and 3-column grid layouts with colorful tiles*
+
+#### Combined Layout
+![Combined Layout](screenshots/combined_layout.png)
+*Horizontal list and grid view in a single scrollable screen*
+
+---
+
+### 🔍 Performance Best Practices
+
+Our implementation follows these optimization techniques:
+
+1. **Use Builder Constructors**
+   ```dart
+   ListView.builder()  // ✅ Lazy loading
+   ListView()          // ❌ Loads all at once
+   ```
+
+2. **Set shrinkWrap for Nested Scrolling**
+   ```dart
+   GridView.builder(
+     shrinkWrap: true,
+     physics: NeverScrollableScrollPhysics(),
+   )
+   ```
+
+3. **Optimize Item Count**
+   - Only load what's needed
+   - Implement pagination for large datasets
+
+4. **Use Const Constructors**
+   - Reduces widget rebuilds
+   - Improves performance
+
+---
+
+### 💡 Reflection Questions
+
+#### How does ListView differ from GridView in design use cases?
+
+**ListView** is ideal for:
+- Single-column content (contacts, messages, settings)
+- Horizontally scrolling content (image carousels, category filters)
+- Variable height items (news articles, social media posts)
+- Sequential data presentation
+
+**GridView** excels at:
+- Multi-column layouts (photo galleries, product grids)
+- Uniform-sized items (app icons, calendar days)
+- Dense information display (dashboards, tile-based UIs)
+- Symmetrical content arrangement
+
+**Key Difference**: ListView focuses on sequential, linear presentation, while GridView emphasizes spatial organization across multiple columns.
+
+---
+
+#### Why is ListView.builder() more efficient for large lists?
+
+1. **Lazy Loading**: Creates widgets only when they're about to appear on screen
+2. **Memory Efficient**: Doesn't hold all widgets in memory at once
+3. **On-Demand Rendering**: Builds items dynamically as user scrolls
+4. **Widget Recycling**: Reuses widgets that scroll off-screen
+5. **Smooth Performance**: Prevents UI lag even with thousands of items
+
+**Example Impact:**
+```dart
+// ❌ Regular ListView - Loads 1000 items immediately
+ListView(
+  children: List.generate(1000, (i) => ListTile(...))
+)
+
+// ✅ ListView.builder - Loads items as needed
+ListView.builder(
+  itemCount: 1000,
+  itemBuilder: (context, index) => ListTile(...)
+)
+```
+
+---
+
+#### What can you do to prevent lag or overflow errors in scrollable views?
+
+**1. Use Bounded Heights:**
+```dart
+// ✅ Wrap ListView in Container with height
+Container(
+  height: 300,
+  child: ListView.builder(...)
+)
+```
+
+**2. Set Physics Correctly:**
+```dart
+// For nested scrolling
+GridView.builder(
+  physics: NeverScrollableScrollPhysics(),
+  shrinkWrap: true,
+)
+```
+
+**3. Avoid Deep Widget Trees:**
+```dart
+// ❌ Bad - Nested scrollables without control
+SingleChildScrollView(
+  child: ListView(...)  // Causes issues
+)
+
+// ✅ Good - Use shrinkWrap and disable physics
+SingleChildScrollView(
+  child: ListView.builder(
+    shrinkWrap: true,
+    physics: NeverScrollableScrollPhysics(),
+  )
+)
+```
+
+**4. Implement Pagination:**
+- Load data in chunks (20-50 items at a time)
+- Use infinite scroll with loading indicators
+
+**5. Optimize Item Widgets:**
+- Use const constructors where possible
+- Keep itemBuilder simple and lightweight
+- Cache images and heavy computations
+
+**6. Profile Performance:**
+```bash
+flutter run --profile
+```
+
+---
+
+### 🚀 How to Access the Demo
+
+1. Launch the app
+2. From the home screen, tap the **scroll icon** (📜) in the app bar
+3. Explore the three tabs:
+   - **ListView**: See vertical and horizontal lists
+   - **GridView**: Compare 2-column and 3-column grids
+   - **Combined**: Experience both in one layout
+
+---
+
+### 📁 File Structure
+
+```
+lib/screens/
+└── scrollable_views.dart      # ⭐ Complete scrollable demo
+    ├── _buildListViewTab()           # ListView examples
+    ├── _buildGridViewTab()           # GridView examples
+    └── _buildCombinedTab()           # Combined layout
+```
+
+---
+
+### 🎓 Learning Outcomes
+
+By implementing scrollable views, we've learned:
+
+✅ How to use ListView and GridView for dynamic content  
+✅ The difference between regular and builder constructors  
+✅ Performance optimization techniques for large lists  
+✅ How to combine multiple scrollable widgets  
+✅ Best practices for preventing overflow errors  
+✅ Proper use of scroll physics and shrinkWrap  
+
+---
+
