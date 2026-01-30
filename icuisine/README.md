@@ -336,10 +336,6 @@ By completing this sprint, we've learned:
 
 ---
 
-**Made with ❤️ using Flutter**
-
----
-
 ## 📜 Scrollable Views: ListView and GridView
 
 ### Overview
@@ -695,6 +691,137 @@ By implementing scrollable views, we've learned:
 ✅ How to combine multiple scrollable widgets  
 ✅ Best practices for preventing overflow errors  
 ✅ Proper use of scroll physics and shrinkWrap  
+
+---
+
+## Responsive Design Demo
+
+A demonstration of how to build adaptive layouts in Flutter using MediaQuery and LayoutBuilder.
+
+## Responsive Design in Flutter
+Responsive design ensures your app’s interface adjusts dynamically to different screen sizes and orientations. Instead of using fixed pixel values, you use relative sizing based on screen dimensions.
+
+### Why it matters
+- Improves usability on different devices
+- Ensures accessibility and consistent design
+- Helps your app adapt seamlessly to both mobile and tablet layouts
+
+## MediaQuery Example
+```dart
+var screenWidth = MediaQuery.of(context).size.width;
+Container(
+  width: screenWidth * 0.8,
+  height: 100,
+  color: Colors.teal,
+  child: Center(child: Text('Responsive Container')),
+);
+```
+
+## LayoutBuilder Example
+```dart
+LayoutBuilder(
+  builder: (context, constraints) {
+    if (constraints.maxWidth < 600) {
+      return Column(children: [Text('Mobile Layout')]);
+    } else {
+      return Row(children: [Text('Tablet Layout')]);
+    }
+  },
+)
+```
+
+## Combined Example
+See `lib/screens/responsive_demo.dart`:
+```dart
+class ResponsiveDemo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var screenWidth = MediaQuery.of(context).size.width;
+    return Scaffold(
+      appBar: AppBar(title: Text('Responsive Design Demo')),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          if (screenWidth < 600) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: screenWidth * 0.8,
+                  height: 100,
+                  color: Colors.tealAccent,
+                  child: Center(child: Text('Mobile View')),
+                ),
+              ],
+            );
+          } else {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  width: 250,
+                  height: 150,
+                  color: Colors.orangeAccent,
+                  child: Center(child: Text('Tablet Left Panel')),
+                ),
+                Container(
+                  width: 250,
+                  height: 150,
+                  color: Colors.tealAccent,
+                  child: Center(child: Text('Tablet Right Panel')),
+                ),
+              ],
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+```
+
+## Screenshots
+- Mobile layout: ![Mobile Screenshot](screenshots/mobile.png)
+- Tablet layout: ![Tablet Screenshot](screenshots/tablet.png)
+
+## Reflection
+- **Why is responsiveness important in mobile development?**
+  - It ensures a consistent, usable experience across all devices and screen sizes.
+- **How does LayoutBuilder differ from MediaQuery?**
+  - MediaQuery provides device metrics, while LayoutBuilder gives widget constraints for building conditional layouts.
+- **How could your team use these tools to scale the app design efficiently?**
+  - By combining both, you can create flexible, maintainable UIs that adapt to any device, reducing rework and improving user experience.
+
+---
+
+## 📝 Commit Message
+
+```
+feat: implemented demo showing stateless and stateful widgets
+
+- Created comprehensive widget demo screen with multiple examples
+- Implemented Counter, Color Changer, and Theme Toggle widgets
+- Added static header and info card using StatelessWidget
+- Integrated navigation from home screen to demo
+- Updated README with detailed explanations and code snippets
+- Demonstrated proper state management with setState()
+```
+
+---
+
+## 🎓 Learning Outcomes
+
+By completing this sprint, we've learned:
+
+✅ The fundamental difference between Stateless and Stateful widgets  
+✅ When to use each widget type appropriately  
+✅ How to manage state using `setState()`  
+✅ Best practices for widget composition  
+✅ How to create interactive, responsive Flutter UIs  
+✅ The importance of separating concerns in widget architecture  
+
+---
+
+**Made with ❤️ using Flutter**
 
 ---
 
