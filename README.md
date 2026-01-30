@@ -14,6 +14,7 @@
   - [Folder Structure Exploration](#sprint-2--folder-structure-exploration)
   - [Stateless vs Stateful Widgets](#sprint-2--stateless-vs-stateful-widgets)
   - [Scrollable Views: ListView & GridView](#-sprint-2---scrollable-views-listview-and-gridview)
+  - [Reusable Custom Widgets](#sprint-2--reusable-custom-widgets)
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
 - [Documentation](#documentation)
@@ -28,11 +29,12 @@
 | Folder Structure Exploration | ✅ Complete | [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) |
 | Stateless vs Stateful Widgets | ✅ Complete | [icuisine/README.md](icuisine/README.md) |
 | **Scrollable Views (ListView & GridView)** | ✅ **Complete** | [📚 See Below](#-sprint-2---scrollable-views-listview-and-gridview) |
+| **Reusable Custom Widgets** | ✅ **Complete** | [🎨 See Below](#sprint-2--reusable-custom-widgets) |
 
 ### Latest Implementation: Scrollable Views ⭐
 
-**Completion Date:** January 29, 2026  
-**Lines of Code:** 517 (implementation) + 2,650+ (documentation)  
+**Completion Date:** January 30, 2026  
+**Lines of Code:** 650+ (implementation) + 3,000+ (documentation)  
 **Status:** ✅ Production-ready
 
 **Quick Links:**
@@ -4231,6 +4233,63 @@ Test these scenarios in the demo:
 5. **Statistics Display** - Real-time level calculation
 6. **Icon Variations** - 5 different icons based on progress
 7. **Tooltip Guidance** - Help text on reset button
+
+---
+
+## Sprint 2 – Reusable Custom Widgets
+
+### Overview
+Refactored the ICuisine UI into modular, reusable components. This approach follows the "Lego set" philosophy of Flutter development—building small, specialized blocks that can be combined to form complex designs.
+
+### Implemented Reusable Widgets
+
+#### 1. CustomStatCard (Stateless)
+A versatile card component used for displaying key metrics or information chunks with a consistent visual language. It supports icons, labels, and value fields with customizable color themes.
+
+**Usage in code:**
+```dart
+CustomStatCard(
+  label: 'Total Orders',
+  value: '128',
+  icon: Icons.receipt_long,
+  color: Colors.blue,
+)
+```
+
+**Reused in:**
+- `HomeScreen`: Displays dashboard statistics (Total Orders, Pending, etc.).
+- `DetailsScreen`: Displays navigation argument details (Title, Message, Timestamp).
+
+#### 2. PrimaryButton (Stateless)
+A standardized interactive button used throughout the application. It includes built-in support for:
+- **Loading states**: Automatically shows a spinner when `isLoading` is true.
+- **Icons**: Optional leading icon support.
+- **Styling**: Consistent rounded corners, elevation, and typography.
+
+**Usage in code:**
+```dart
+PrimaryButton(
+  label: 'Log In',
+  onPressed: _login,
+  isLoading: _isLoading,
+),
+```
+
+**Reused in:**
+- `LoginScreen`: For the main authentication action.
+- `HomeScreen`: For critical actions like deleting an order.
+- `DetailsScreen`: For navigation controls (Back/Home buttons).
+
+### Benefits of Modular UI Design
+- **Consistent UX**: Users experience the same button behavior and card styles across all screens.
+- **Improved Maintainability**: Styling changes to `PrimaryButton` automatically propagate to the Login, Home, and Details screens.
+- **Reduced Code Duplication**: Eliminated repetitive helper methods in screen files by moving them to the `lib/widgets` directory.
+- **Development Speed**: New screens can be rapidly assembled using these pre-built blocks.
+
+### Reflection
+- **Efficiency**: Reusable widgets significantly reduced the lines of code in screen files, making them easier to read and debug.
+- **Modularity**: Designing for reusability forced a cleaner separation of concerns between UI presentation and business logic.
+- **Team Collaboration**: Standardized widgets act as a design system, ensuring multiple developers can contribute while maintaining a unified look and feel.
 
 ---
 

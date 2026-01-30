@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icuisine/services/auth_service.dart';
 import 'package:icuisine/services/firestore_service.dart';
+import 'package:icuisine/widgets/custom_stat_card.dart';
+import 'package:icuisine/widgets/primary_button.dart';
 import 'login_screen.dart';
 import 'user_input_form.dart';
 import 'stateless_stateful_demo.dart';
@@ -290,21 +292,23 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Row(
                         children: [
+                      Row(
+                        children: [
                           Expanded(
-                            child: _buildStatCard(
-                              'Total Orders',
-                              totalOrders.toString(),
-                              Icons.receipt_long,
-                              Colors.blue,
+                            child: CustomStatCard(
+                              label: 'Total Orders',
+                              value: totalOrders.toString(),
+                              icon: Icons.receipt_long,
+                              color: Colors.blue,
                             ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: _buildStatCard(
-                              'Pending',
-                              pendingOrders.toString(),
-                              Icons.schedule,
-                              Colors.orange,
+                            child: CustomStatCard(
+                              label: 'Pending',
+                              value: pendingOrders.toString(),
+                              icon: Icons.schedule,
+                              color: Colors.orange,
                             ),
                           ),
                         ],
@@ -313,20 +317,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: _buildStatCard(
-                              'Completed',
-                              completedOrders.toString(),
-                              Icons.check_circle,
-                              Colors.green,
+                            child: CustomStatCard(
+                              label: 'Completed',
+                              value: completedOrders.toString(),
+                              icon: Icons.check_circle,
+                              color: Colors.green,
                             ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: _buildStatCard(
-                              isVendor ? 'Revenue' : 'Spent',
-                              '\$${totalRevenue.toStringAsFixed(2)}',
-                              Icons.attach_money,
-                              Colors.purple,
+                            child: CustomStatCard(
+                              label: isVendor ? 'Revenue' : 'Spent',
+                              value: '\$${totalRevenue.toStringAsFixed(2)}',
+                              icon: Icons.attach_money,
+                              color: Colors.purple,
                             ),
                           ),
                         ],
@@ -494,44 +498,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.3)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: color, size: 24),
-              const Spacer(),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: color,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.grey[700],
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildFilterChip(String label, String value) {
     final isSelected = _selectedFilter == value;
@@ -767,28 +733,21 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () async {
-                  Navigator.pop(context);
-                  final user = _authService.currentUser;
-                  await _firestoreService.deleteOrder(orderId, user?.uid ?? '');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Order deleted'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.delete),
-                label: const Text('Delete Order'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                ),
-              ),
+            PrimaryButton(
+              label: 'Delete Order',
+              onPressed: () async {
+                Navigator.pop(context);
+                final user = _authService.currentUser;
+                await _firestoreService.deleteOrder(orderId, user?.uid ?? '');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Order deleted'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              },
+              icon: Icons.delete,
+              color: Colors.red,
             ),
           ],
         ),
