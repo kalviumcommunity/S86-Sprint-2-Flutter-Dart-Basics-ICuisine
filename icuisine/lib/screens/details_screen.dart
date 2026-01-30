@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:icuisine/widgets/custom_stat_card.dart';
+import 'package:icuisine/widgets/primary_button.dart';
 
 /// Details Screen with Arguments
 /// Demonstrates how to receive and display data passed from navigation
@@ -76,7 +78,7 @@ class DetailsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
-              _buildArgumentCard(
+              CustomStatCard(
                 icon: Icons.title,
                 label: 'Title',
                 value: title,
@@ -84,7 +86,7 @@ class DetailsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
-              _buildArgumentCard(
+              CustomStatCard(
                 icon: Icons.message,
                 label: 'Message',
                 value: message,
@@ -92,7 +94,7 @@ class DetailsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
-              _buildArgumentCard(
+              CustomStatCard(
                 icon: Icons.schedule,
                 label: 'Timestamp',
                 value: timestamp,
@@ -203,22 +205,20 @@ final message = args?['message'];''',
               Row(
                 children: [
                   Expanded(
-                    child: ElevatedButton(
+                    child: PrimaryButton(
+                      label: 'Back',
                       onPressed: () {
                         debugPrint('🔙 Pop current screen');
                         Navigator.pop(context);
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                      child: const Text('← Back'),
+                      color: Colors.blue,
+                      icon: Icons.arrow_back,
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: ElevatedButton(
+                    child: PrimaryButton(
+                      label: 'Home',
                       onPressed: () {
                         debugPrint('🏠 Go to Home');
                         Navigator.pushNamedAndRemoveUntil(
@@ -227,12 +227,8 @@ final message = args?['message'];''',
                           (route) => false,
                         );
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                      child: const Text('Home →'),
+                      color: Colors.green,
+                      icon: Icons.home,
                     ),
                   ),
                 ],
@@ -245,50 +241,4 @@ final message = args?['message'];''',
     );
   }
 
-  Widget _buildArgumentCard({
-    required IconData icon,
-    required String label,
-    required String value,
-    required Color color,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: color.withOpacity(0.3),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: color, size: 20),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: color,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.black87,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

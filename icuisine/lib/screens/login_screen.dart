@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:icuisine/services/auth_service.dart';
+import 'package:icuisine/widgets/primary_button.dart';
 import 'signup_screen.dart';
 import 'home_screen.dart';
 import 'widget_tree_demo.dart';
@@ -222,34 +223,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 16),
 
                         // Login Button
-                        SizedBox(
-                          height: 50,
-                          child: ElevatedButton(
-                            onPressed: _isLoading ? null : _login,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context).colorScheme.primary,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: _isLoading
-                                ? const SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                    ),
-                                  )
-                                : const Text(
-                                    'Log In',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                          ),
+                        PrimaryButton(
+                          label: 'Log In',
+                          onPressed: _login,
+                          isLoading: _isLoading,
                         ),
                         const SizedBox(height: 16),
 
