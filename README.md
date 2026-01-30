@@ -4306,3 +4306,257 @@ PrimaryButton(
 ````
 ```
 
+📱 Responsive Design Using MediaQuery & LayoutBuilder (Flutter)
+📌 Overview
+
+This module focuses on implementing responsive and adaptive UI design in Flutter using MediaQuery and LayoutBuilder. The goal is to ensure that the application layout scales smoothly across different screen sizes, including mobile phones and tablets, without overflow or distortion issues.
+
+🎯 Responsive Design Concept
+
+Responsive design allows the UI to:
+
+Adapt to different screen sizes and orientations
+
+Maintain usability and accessibility
+
+Provide a consistent user experience across devices
+
+Instead of fixed pixel values, relative sizing and layout conditions are used.
+
+📐 Using MediaQuery
+
+MediaQuery provides information about the device’s screen dimensions and orientation.
+
+var screenWidth = MediaQuery.of(context).size.width;
+var screenHeight = MediaQuery.of(context).size.height;
+
+
+These values were used to create flexible layouts:
+
+Container(
+  width: screenWidth * 0.8,
+  height: screenHeight * 0.1,
+  color: Colors.teal,
+  child: Center(child: Text('Responsive Container')),
+);
+
+
+✅ This ensures the UI scales proportionally on all devices.
+
+🧩 Using LayoutBuilder
+
+LayoutBuilder allows conditional UI rendering based on available screen width.
+
+LayoutBuilder(
+  builder: (context, constraints) {
+    if (constraints.maxWidth < 600) {
+      return Column(
+        children: [
+          Text('Mobile Layout'),
+          Icon(Icons.phone_android, size: 80),
+        ],
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Tablet Layout'),
+          SizedBox(width: 20),
+          Icon(Icons.tablet, size: 100),
+        ],
+      );
+    }
+  },
+);
+
+
+📱 Screens below 600px use a Column (mobile layout)
+📲 Larger screens use a Row (tablet layout)
+
+🔗 Combining MediaQuery & LayoutBuilder
+
+Both tools were combined to build a fully adaptive interface.
+
+Key features:
+
+MediaQuery for dynamic sizing
+
+LayoutBuilder for layout switching
+
+No fixed dimensions causing overflow
+
+This approach allows seamless adaptation between mobile and tablet views.
+
+🧪 Testing & Verification
+
+The application was tested on:
+
+Mobile emulator (small screen)
+
+Tablet emulator (large screen)
+
+Verified that:
+
+Layout switches correctly
+
+UI elements resize proportionally
+
+No overflow or UI distortion occurs
+
+📸 Screenshots included:
+
+Mobile layout view
+
+Tablet layout view
+
+⚠️ Common Issues Faced
+
+Overflow errors due to fixed sizes
+
+Incorrect width breakpoints
+
+Forgetting to test on multiple emulators
+
+🧠 Reflection
+
+Why is responsiveness important in mobile development?
+
+Supports multiple device sizes
+
+Improves accessibility and usability
+
+Enhances user experience across platforms
+
+How does LayoutBuilder differ from MediaQuery?
+
+MediaQuery provides overall screen dimensions
+
+LayoutBuilder responds to parent widget constraints
+
+LayoutBuilder is ideal for conditional UI rendering
+
+How do these tools support scalable app design?
+
+Reduce device-specific code
+
+Improve maintainability
+
+Enable future expansion to tablets and foldable devices
+
+
+📦 Managing Images, Icons, and Local Assets in Flutter
+📌 Overview
+
+This module demonstrates how to add, register, and display local assets such as images and icons in a Flutter application. Proper asset management improves UI quality, consistency, and scalability across devices.
+
+📁 Project Asset Structure
+
+The following folder structure was created inside the project root to organize assets efficiently:
+
+assets/
+ ├── images/
+ │    ├── logo.png
+ │    ├── banner.jpg
+ │    └── background.png
+ └── icons/
+      ├── star.png
+      └── profile.png
+
+⚙️ Asset Registration (pubspec.yaml)
+
+Assets were registered under the flutter section in pubspec.yaml to make them accessible within the app.
+
+flutter:
+  assets:
+    - assets/images/
+    - assets/icons/
+
+
+✅ Proper indentation (2 spaces) was maintained to avoid build errors.
+
+🖼️ Displaying Local Images
+
+Local images were rendered using the Image.asset() widget.
+
+Image.asset(
+  'assets/images/logo.png',
+  width: 150,
+  height: 150,
+  fit: BoxFit.cover,
+)
+
+
+Images were also used as backgrounds inside containers using DecorationImage.
+
+⭐ Using Built-in Flutter Icons
+
+Flutter’s Material Icons were integrated using the Icon widget.
+
+Icon(Icons.star, color: Colors.amber, size: 32)
+
+
+Cupertino icons were used to achieve an iOS-style look where required.
+
+Icon(CupertinoIcons.heart, color: Colors.red)
+
+🎨 Combined UI Example
+
+Images and icons were combined to build a visually appealing interface.
+
+Features demonstrated:
+
+Local image loading
+
+Multiple Material icons
+
+Responsive UI alignment
+
+🧪 Testing & Verification
+
+The application was tested to ensure:
+
+All assets load correctly
+
+No “missing asset” errors occur
+
+Images scale properly across screen sizes
+
+📸 Screenshots included:
+
+Asset display in the app
+
+Asset folder structure
+
+pubspec.yaml configuration
+
+🔍 Common Issues Faced
+
+Incorrect asset paths
+
+YAML indentation errors
+
+Forgetting to run flutter pub get
+
+Hot reload not reflecting new assets
+
+🧠 Reflection
+
+Steps required to load assets correctly in Flutter:
+
+Create an assets directory
+
+Register assets in pubspec.yaml
+
+Run flutter pub get
+
+Load assets using Image.asset() or AssetImage
+
+How proper asset management supports scalability:
+
+Improves maintainability
+
+Enables easy asset replacement
+
+Keeps UI consistent across screens
+
+Supports future feature expansion
