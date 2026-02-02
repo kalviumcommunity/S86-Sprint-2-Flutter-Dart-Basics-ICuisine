@@ -382,7 +382,7 @@ class _UserDashboardState extends State<UserDashboard> {
                             if (value == 'delete') {
                               _deleteOrder(order.id);
                             } else {
-                              _updateOrderStatus(order.id, value as String);
+                              _updateOrderStatus(order.id, value);
                             }
                           },
                         ),
