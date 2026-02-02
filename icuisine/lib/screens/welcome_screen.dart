@@ -1,7 +1,46 @@
 import 'package:flutter/material.dart';
+import '../animations/animated_widgets.dart';
+import '../animations/page_transitions.dart';
+import 'login_screen.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
+
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
+    );
+
+    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero)
+        .animate(
+          CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic),
+        );
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,55 +61,66 @@ class WelcomeScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Top Section - Logo and Title
+              // Top Section - Logo and Title with animations
               Expanded(
                 flex: 3,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // App Icon/Logo
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(30),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SlideTransition(
+                    position: _slideAnimation,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // App Icon/Logo with rotating animation
+                        PulsingWidget(
+                          duration: const Duration(milliseconds: 2000),
+                          child: Container(
+                            width: 120,
+                            height: 120,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(30),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 10),
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              Icons.restaurant_menu,
+                              size: 70,
+                              color: const Color(0xFFFF6B35),
+                            ),
                           ),
-                        ],
-                      ),
-                      child: Icon(
-                        Icons.restaurant_menu,
-                        size: 70,
-                        color: const Color(0xFFFF6B35),
-                      ),
+                        ),
+                        const SizedBox(height: 30),
+                        // App Name with fade animation
+                        AnimatedDefaultTextStyle(
+                          duration: const Duration(milliseconds: 800),
+                          style: const TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            letterSpacing: 2,
+                          ),
+                          child: const Text('iCuisine'),
+                        ),
+                        const SizedBox(height: 10),
+                        // Tagline
+                        AnimatedDefaultTextStyle(
+                          duration: const Duration(milliseconds: 800),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.white70,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          child: const Text('Smart Orders, Happy Customers'),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 30),
-                    // App Name
-                    const Text(
-                      'iCuisine',
-                      style: TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 2,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    // Tagline
-                    const Text(
-                      'Smart Orders, Happy Customers',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white70,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
 
@@ -101,7 +151,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
 
-              // Bottom Section - CTA Buttons
+              // Bottom Section - CTA Buttons with animations
               Expanded(
                 flex: 2,
                 child: Padding(
@@ -109,52 +159,53 @@ class WelcomeScreen extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Get Started Button
+                      // Get Started Button with animation
                       SizedBox(
                         width: double.infinity,
                         height: 56,
-                        child: ElevatedButton(
+                        child: AnimatedButton(
+                          label: 'Get Started',
+                          color: Colors.white,
                           onPressed: () {
-                            // TODO: Navigate to vendor registration/login
+                            Navigator.push(
+                              context,
+                              SlidePageRoute(page: const LoginScreen()),
+                            );
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: const Color(0xFFFF6B35),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            elevation: 8,
-                          ),
-                          child: const Text(
-                            'Get Started',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
-                      // Sign In Button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 56,
-                        child: OutlinedButton(
-                          onPressed: () {
-                            // TODO: Navigate to sign in
-                          },
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            side: const BorderSide(color: Colors.white, width: 2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
+                      // Sign In Button with scale animation
+                      ScaleTransition(
+                        scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                          CurvedAnimation(
+                            parent: _controller,
+                            curve: const Interval(0.3, 1.0, curve: Curves.easeOut),
                           ),
-                          child: const Text(
-                            'Sign In',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
+                        ),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 56,
+                          child: OutlinedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                SlidePageRoute(page: const LoginScreen()),
+                              );
+                            },
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              side: const BorderSide(color: Colors.white, width: 2),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            child: const Text(
+                              'Sign In',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ),

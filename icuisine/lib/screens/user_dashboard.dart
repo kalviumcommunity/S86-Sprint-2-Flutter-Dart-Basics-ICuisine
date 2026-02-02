@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icuisine/services/auth_service.dart';
 import 'package:icuisine/services/firestore_service.dart';
+import '../animations/animated_widgets.dart';
+import '../animations/page_transitions.dart';
 import 'login_screen.dart';
 
 class UserDashboard extends StatefulWidget {
@@ -52,9 +54,7 @@ class _UserDashboardState extends State<UserDashboard> {
       await _authService.signOut();
       if (mounted) {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => const LoginScreen(),
-          ),
+          SlidePageRoute(page: const LoginScreen()),
         );
       }
     } catch (e) {
@@ -152,17 +152,17 @@ class _UserDashboardState extends State<UserDashboard> {
 
   Widget _buildUserInfo() {
     if (_isLoadingUser) {
-      return const Card(
-        child: Padding(
+      return AnimatedCardWidget(
+        delay: const Duration(milliseconds: 0),
+        child: const Padding(
           padding: EdgeInsets.all(16.0),
-          child: Center(child: CircularProgressIndicator()),
+          child: Center(child: RotatingLoadingWidget()),
         ),
       );
     }
 
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return AnimatedCardWidget(
+      delay: const Duration(milliseconds: 0),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -170,15 +170,18 @@ class _UserDashboardState extends State<UserDashboard> {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  child: Text(
-                    _userData?['name']?.substring(0, 1).toUpperCase() ?? 'U',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                PulsingWidget(
+                  duration: const Duration(milliseconds: 2000),
+                  child: CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    child: Text(
+                      _userData?['name']?.substring(0, 1).toUpperCase() ?? 'U',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
@@ -233,9 +236,8 @@ class _UserDashboardState extends State<UserDashboard> {
   }
 
   Widget _buildAddOrderCard() {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return AnimatedCardWidget(
+      delay: const Duration(milliseconds: 100),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -264,18 +266,11 @@ class _UserDashboardState extends State<UserDashboard> {
             const SizedBox(height: 12),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton.icon(
+              child: AnimatedButton(
+                label: 'Add Order',
+                color: Theme.of(context).colorScheme.primary,
+                icon: Icons.add,
                 onPressed: _addOrder,
-                icon: const Icon(Icons.add),
-                label: const Text('Add Order'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
               ),
             ),
           ],
@@ -288,9 +283,8 @@ class _UserDashboardState extends State<UserDashboard> {
     final user = _authService.currentUser;
     if (user == null) return const SizedBox.shrink();
 
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return AnimatedCardWidget(
+      delay: const Duration(milliseconds: 200),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -311,7 +305,7 @@ class _UserDashboardState extends State<UserDashboard> {
                   return const Center(
                     child: Padding(
                       padding: EdgeInsets.all(20.0),
-                      child: CircularProgressIndicator(),
+                      child: RotatingLoadingWidget(),
                     ),
                   );
                 }
@@ -342,8 +336,8 @@ class _UserDashboardState extends State<UserDashboard> {
                     final orderData = order.data() as Map<String, dynamic>;
                     final status = orderData['status'] ?? 'pending';
 
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 8),
+                    return AnimatedCardWidget(
+                      delay: Duration(milliseconds: 100 * (index + 1)),
                       child: ListTile(
                         leading: CircleAvatar(
                           backgroundColor: _getStatusColor(status),
