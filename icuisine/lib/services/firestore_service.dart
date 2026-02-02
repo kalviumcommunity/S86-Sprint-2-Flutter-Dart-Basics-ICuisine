@@ -66,11 +66,12 @@ class FirestoreService {
 
   // ========== ORDER OPERATIONS ==========
 
-  /// Add a new order
-  Future<String> addOrder(Map<String, dynamic> orderData) async {
+  /// Add a new order (always associates with current user)
+  Future<String> addOrder(String userId, Map<String, dynamic> orderData) async {
     try {
       final docRef = await _firestore.collection(ordersCollection).add({
         ...orderData,
+        'userId': userId,  // ✅ Always link to current user
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
         'status': 'pending', // Default status
@@ -82,20 +83,35 @@ class FirestoreService {
     }
   }
 
-  /// Get order by ID
-  Future<Map<String, dynamic>?> getOrder(String orderId) async {
+  /// Get order by ID (verify user owns it)
+  /// ⚠️ SECURITY: Verifies user ownership before returning
+  Future<Map<String, dynamic>?> getOrder(String orderId, String userId) async {
     try {
       final doc = await _firestore.collection(ordersCollection).doc(orderId).get();
-      return doc.data();
+      final data = doc.data();
+      
+      // ✅ Verify user owns this order
+      if (data != null && data['userId'] != userId) {
+        throw 'Unauthorized: You can only view your own orders';
+      }
+      
+      return data;
     } catch (e) {
       print('Error getting order: $e');
       throw 'Failed to retrieve order. Please try again.';
     }
   }
 
-  /// Update order status or data
-  Future<void> updateOrder(String orderId, Map<String, dynamic> data) async {
+  /// Update order status or data (only if user owns it)
+  /// ⚠️ SECURITY: Verifies user ownership before updating
+  Future<void> updateOrder(String orderId, String userId, Map<String, dynamic> data) async {
     try {
+      // ✅ Verify the order belongs to the current user
+      final order = await _firestore.collection(ordersCollection).doc(orderId).get();
+      if (order.data()?['userId'] != userId) {
+        throw 'Unauthorized: You can only update your own orders';
+      }
+
       await _firestore.collection(ordersCollection).doc(orderId).update({
         ...data,
         'updatedAt': FieldValue.serverTimestamp(),
@@ -106,9 +122,16 @@ class FirestoreService {
     }
   }
 
-  /// Delete an order
-  Future<void> deleteOrder(String orderId) async {
+  /// Delete order (only if user owns it)
+  /// ⚠️ SECURITY: Verifies user ownership before deleting
+  Future<void> deleteOrder(String orderId, String userId) async {
     try {
+      // ✅ Verify the order belongs to the current user
+      final order = await _firestore.collection(ordersCollection).doc(orderId).get();
+      if (order.data()?['userId'] != userId) {
+        throw 'Unauthorized: You can only delete your own orders';
+      }
+
       await _firestore.collection(ordersCollection).doc(orderId).delete();
     } catch (e) {
       print('Error deleting order: $e');
@@ -126,17 +149,24 @@ class FirestoreService {
   }
 
   /// Stream all orders (for vendor dashboard)
-  Stream<QuerySnapshot<Map<String, dynamic>>> streamAllOrders() {
+  /// ⚠️ SECURITY: Filtered by vendorId - users only see their own orders
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamVendorOrders(String vendorId) {
     return _firestore
         .collection(ordersCollection)
+        .where('vendorId', isEqualTo: vendorId)  // ✅ Only vendor's orders
         .orderBy('createdAt', descending: true)
         .snapshots();
   }
 
   /// Get orders by status
-  Stream<QuerySnapshot<Map<String, dynamic>>> streamOrdersByStatus(String status) {
+  /// ⚠️ SECURITY: Filtered by userId - users only see their own orders  
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamUserOrdersByStatus(
+    String userId,
+    String status,
+  ) {
     return _firestore
         .collection(ordersCollection)
+        .where('userId', isEqualTo: userId)  // ✅ Only user's orders
         .where('status', isEqualTo: status)
         .orderBy('createdAt', descending: true)
         .snapshots();

@@ -8,7 +8,7 @@ class ResponsiveHome extends StatefulWidget {
 }
 
 class _ResponsiveHomeState extends State<ResponsiveHome> {
-  int _selectedIndex = 0;
+  final int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -324,7 +324,7 @@ class _ResponsiveHomeState extends State<ResponsiveHome> {
                   ),
                   SizedBox(height: isPhone ? 4 : 8),
                   Text(
-                    '2 items • Table ${orderNumber}',
+                    '2 items • Table $orderNumber',
                     style: TextStyle(
                       fontSize: fontSize * 0.9,
                       color: Colors.grey[600],

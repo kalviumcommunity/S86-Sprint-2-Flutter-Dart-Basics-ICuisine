@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:icuisine/services/auth_service.dart';
 import '../animations/animated_widgets.dart';
 import '../animations/page_transitions.dart';
+import 'package:icuisine/widgets/primary_button.dart';
 import 'signup_screen.dart';
-import 'user_dashboard.dart';
+import 'home_screen.dart';
+import 'widget_tree_demo.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -72,6 +74,9 @@ class _LoginScreenState extends State<LoginScreen>
         // Navigate to dashboard with animation
         Navigator.of(context).pushReplacement(
           SlidePageRoute(page: const UserDashboard()),
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
         );
       }
     } catch (e) {
@@ -264,6 +269,13 @@ class _LoginScreenState extends State<LoginScreen>
                               ),
                             ),
                             const SizedBox(height: 8),
+                        // Login Button
+                        PrimaryButton(
+                          label: 'Log In',
+                          onPressed: _login,
+                          isLoading: _isLoading,
+                        ),
+                        const SizedBox(height: 16),
 
                             // Forgot Password with animation
                             ScaleTransition(
@@ -370,6 +382,24 @@ class _LoginScreenState extends State<LoginScreen>
                           ],
                         ),
                       ),
+                        const SizedBox(height: 16),
+
+                        // Widget Tree Demo Button
+                        TextButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const WidgetTreeDemo(),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.account_tree),
+                          label: const Text('View Widget Tree Demo'),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'screens/welcome_screen.dart';
-import 'screens/responsive_home.dart';
 import 'screens/login_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/navigation_demo.dart';
+import 'screens/settings_screen.dart';
+import 'screens/details_screen.dart';
+import 'screens/navigation_stack_screen.dart';
+import 'screens/responsive_layout.dart';
+import 'screens/scrollable_views.dart';
+import 'services/auth_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,8 +35,23 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Roboto',
       ),
-      // Start with login screen for Firebase authentication
-      home: const LoginScreen(),
+      // Named routes configuration
+      initialRoute: '/',
+      routes: {
+        // Home screen (initial route)
+        '/': (context) => AuthService().currentUser != null
+            ? const HomeScreen()
+            : const LoginScreen(),
+        // Navigation demo screens
+        '/navigation-demo': (context) => const NavigationDemoScreen(),
+        '/settings': (context) => const SettingsScreen(),
+        '/details': (context) => const DetailsScreen(),
+        '/navigation-stack': (context) => const NavigationStackScreen(),
+        // Responsive layout demo
+        '/responsive-layout': (context) => const ResponsiveLayout(),
+        // Scrollable views demo
+        '/scrollable-views': (context) => const ScrollableViews(),
+      },
     );
   }
 }
