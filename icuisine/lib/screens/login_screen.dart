@@ -73,7 +73,6 @@ class _LoginScreenState extends State<LoginScreen>
       if (user != null && mounted) {
         // Navigate to dashboard with animation
         Navigator.of(context).pushReplacement(
-          SlidePageRoute(page: const UserDashboard()),
           MaterialPageRoute(
             builder: (context) => const HomeScreen(),
           ),
@@ -165,14 +164,11 @@ class _LoginScreenState extends State<LoginScreen>
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            // Logo with animation
-                            PulsingWidget(
-                              duration: const Duration(milliseconds: 2000),
-                              child: Icon(
-                                Icons.restaurant_menu,
-                                size: 64,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
+                            // Logo
+                            Icon(
+                              Icons.restaurant_menu,
+                              size: 64,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                             const SizedBox(height: 16),
                             AnimatedDefaultTextStyle(
@@ -269,13 +265,6 @@ class _LoginScreenState extends State<LoginScreen>
                               ),
                             ),
                             const SizedBox(height: 8),
-                        // Login Button
-                        PrimaryButton(
-                          label: 'Log In',
-                          onPressed: _login,
-                          isLoading: _isLoading,
-                        ),
-                        const SizedBox(height: 16),
 
                             // Forgot Password with animation
                             ScaleTransition(
@@ -382,24 +371,6 @@ class _LoginScreenState extends State<LoginScreen>
                           ],
                         ),
                       ),
-                        const SizedBox(height: 16),
-
-                        // Widget Tree Demo Button
-                        TextButton.icon(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const WidgetTreeDemo(),
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.account_tree),
-                          label: const Text('View Widget Tree Demo'),
-                          style: TextButton.styleFrom(
-                            foregroundColor: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                      ],
                     ),
                   ),
                 ),
@@ -409,4 +380,4 @@ class _LoginScreenState extends State<LoginScreen>
         ),
       ),
     );
-  }
+  }}

@@ -2,6 +2,8 @@
 
 This guide will help you set up and run the iCuisine Flutter application after cloning the repository.
 
+**🎯 Sprint 2 Status**: Firebase Authentication with Email & Password is fully implemented and ready to test!
+
 ## Prerequisites
 
 Before you begin, ensure you have the following installed on your system:
@@ -83,9 +85,9 @@ For security reasons, Firebase configuration files are **excluded from the repos
 
 1. **Go to Firebase Console**: https://console.firebase.google.com
 
-2. **Create a New Project**:
-   - Click "Add project"
-   - Enter project name: `icuisine-[your-name]` (use your name to avoid conflicts)
+2. **Use Existing Project or Create New**:
+   - **Current Team Project**: `sprint2-icuisine-project` (already configured)
+   - **OR Create Your Own**: Click "Add project", name it `icuisine-[your-name]`
    - Disable Google Analytics (optional)
    - Click "Create project"
 
@@ -101,8 +103,9 @@ For security reasons, Firebase configuration files are **excluded from the repos
    
    This command will:
    - Log you into your Google account
-   - List your Firebase projects (select the one you just created)
-   - Ask which platforms to configure (select Android, iOS, Web)
+   - List your Firebase projects
+   - Select **`sprint2-icuisine-project`** (or your own project)
+   - Choose platforms: **Android, iOS, Web, Windows, macOS**
    - Automatically generate all required configuration files:
      - `lib/firebase_options.dart`
      - `android/app/google-services.json`
@@ -222,14 +225,20 @@ Once running, you can:
 
 When the app launches:
 
-1. Click **"Don't have an account? Sign Up"**
-2. Fill in the form:
-   - Name: Your Name
-   - Email: test@example.com
-   - Password: password123
-   - User Type: Vendor or Customer
-3. Click **"Sign Up"**
-4. You'll be redirected to the Home Screen
+1. The **Login Screen** appears
+2. Click **"Sign Up"** button at the bottom
+3. Fill in the registration form:
+   - Email: test@example.com (or any valid email)
+   - Password: password123 (minimum 6 characters)
+4. Click **"Sign Up"**
+5. Account is created in Firebase
+6. You'll be automatically logged in and redirected to the Home Screen
+
+**To test Login:**
+1. Click **Logout** from Home Screen
+2. Enter your registered email and password
+3. Click **"Log In"**
+4. You'll be redirected back to Home Screen
 
 ---
 
@@ -238,23 +247,31 @@ When the app launches:
 ```
 icuisine/
 ├── lib/
-│   ├── main.dart                    # App entry point
-│   ├── firebase_options.dart        # Firebase configuration
+│   ├── main.dart                    # App entry point & Firebase init
+│   ├── firebase_options.dart        # Firebase configuration (auto-generated)
 │   ├── screens/
-│   │   ├── home_screen.dart         # Main dashboard
-│   │   ├── login_screen.dart        # User authentication
-│   │   ├── signup_screen.dart       # User registration
-│   │   ├── user_dashboard.dart      # Original dashboard
-│   │   └── widget_tree_demo.dart    # Widget demo
-│   └── services/
-│       ├── auth_service.dart        # Authentication logic
-│       └── firestore_service.dart   # Database operations
+│   │   ├── home_screen.dart         # ✅ Protected dashboard (Sprint 2)
+│   │   ├── login_screen.dart        # ✅ User login (Sprint 2)
+│   │   ├── signup_screen.dart       # ✅ User registration (Sprint 2)
+│   │   └── user_dashboard.dart      # User dashboard
+│   ├── services/
+│   │   ├── auth_service.dart        # ✅ Firebase Auth service (Sprint 2)
+│   │   └── firestore_service.dart   # Firestore operations
+│   ├── widgets/
+│   │   └── primary_button.dart      # Reusable button component
+│   └── animations/
+│       ├── animated_widgets.dart    # Custom animations
+│       └── page_transitions.dart    # Navigation transitions
 ├── android/                         # Android platform code
 ├── ios/                            # iOS platform code
 ├── web/                            # Web platform code
 ├── windows/                        # Windows platform code
+├── assets/
+│   ├── images/                     # App images
+│   └── icons/                      # App icons
 ├── test/                           # Unit tests
-└── pubspec.yaml                    # Dependencies
+├── pubspec.yaml                    # Dependencies
+└── README.md                       # Sprint 2 implementation details
 ```
 
 ---
@@ -460,6 +477,8 @@ For questions or issues, please contact the project team or create an issue on G
 
 ---
 
-**Last Updated**: January 23, 2026
+**Sprint 2 Status**: ✅ Complete (Firebase Authentication Implemented)
+**Last Updated**: February 3, 2026
 **Flutter Version**: 3.38.7
 **Dart Version**: 3.10.7
+**Firebase Project**: sprint2-icuisine-project
