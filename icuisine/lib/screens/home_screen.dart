@@ -292,8 +292,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Row(
                         children: [
-                      Row(
-                        children: [
                           Expanded(
                             child: CustomStatCard(
                               label: 'Total Orders',
