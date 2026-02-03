@@ -6,7 +6,61 @@
 
 Implemented secure user authentication system using Firebase Authentication with Email and Password method. Users can register new accounts, log in securely, and manage their sessions.
 
----
+## 🔒 Persistent Login & Session Handling
+
+### Why Persistent Login?
+Modern users expect to stay logged in even after closing or restarting the app. Persistent login improves user experience and security by reducing repeated logins and ensuring session continuity.
+
+### How It Works in Firebase
+Firebase Authentication automatically manages session persistence using secure tokens stored on the device. No manual storage is needed. The app only needs to listen to authentication state changes and route screens accordingly.
+
+### Auto-Login Flow Implementation
+The app uses `authStateChanges()` to listen for login, logout, and session changes. The main widget is wrapped in a `StreamBuilder` to switch between screens based on the user's authentication state.
+
+#### Code Snippet: Auto-Login with StreamBuilder
+```dart
+home: StreamBuilder<User?>(
+  stream: FirebaseAuth.instance.authStateChanges(),
+  builder: (ctx, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return SplashScreen(); // Show loading or logo screen
+    }
+    if (snapshot.hasData) {
+      return HomeScreen();
+    }
+    return AuthScreen();
+  },
+),
+```
+
+#### Flow Explanation
+- If a user is logged in → go to HomeScreen
+- If no user is logged in → go to AuthScreen
+- While checking → show loading indicator (SplashScreen)
+
+#### Logout Handling
+Calling `FirebaseAuth.instance.signOut();` logs the user out and automatically redirects to the login screen.
+
+#### Session Persistence
+- Login state is preserved after closing and reopening the app.
+- If the session becomes invalid, the user is redirected to the login screen.
+
+#### Testing Steps
+1. Login → HomeScreen appears
+2. Close and reopen the app → HomeScreen appears automatically
+3. Logout → Redirects to AuthScreen
+4. Repeat after restart to confirm behavior
+
+#### Screenshots
+- Before restart: ![Before Restart](path/to/before-restart.png)
+- After restart (auto-login): ![After Restart](path/to/after-restart.png)
+- Logout behavior: ![Logout](path/to/logout.png)
+
+### Reflection
+- Persistent login is essential for a seamless user experience.
+- Firebase simplifies session management by handling tokens and state internally.
+- No manual session storage or refresh logic is required.
+
 
 ## 🔥 Firebase Setup
 
