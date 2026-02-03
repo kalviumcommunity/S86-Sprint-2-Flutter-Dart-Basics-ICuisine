@@ -9,6 +9,7 @@ import 'screens/details_screen.dart';
 import 'screens/navigation_stack_screen.dart';
 import 'screens/responsive_layout.dart';
 import 'screens/scrollable_views.dart';
+import 'screens/splash_screen.dart';
 import 'services/auth_service.dart';
 
 void main() async {
@@ -35,21 +36,24 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Roboto',
       ),
-      // Named routes configuration
-      initialRoute: '/',
+      home: StreamBuilder(
+        stream: AuthService().authStateChanges,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SplashScreen();
+          }
+          if (snapshot.hasData) {
+            return const HomeScreen();
+          }
+          return const LoginScreen();
+        },
+      ),
       routes: {
-        // Home screen (initial route)
-        '/': (context) => AuthService().currentUser != null
-            ? const HomeScreen()
-            : const LoginScreen(),
-        // Navigation demo screens
         '/navigation-demo': (context) => const NavigationDemoScreen(),
         '/settings': (context) => const SettingsScreen(),
         '/details': (context) => const DetailsScreen(),
         '/navigation-stack': (context) => const NavigationStackScreen(),
-        // Responsive layout demo
         '/responsive-layout': (context) => const ResponsiveLayout(),
-        // Scrollable views demo
         '/scrollable-views': (context) => const ScrollableViews(),
       },
     );

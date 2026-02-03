@@ -74,13 +74,15 @@ class _UserDashboardState extends State<UserDashboard> {
     if (user == null || _noteController.text.trim().isEmpty) return;
 
     try {
-      await _firestoreService.addOrder({
-        'userId': user.uid,
-        'userName': _userData?['name'] ?? 'Unknown',
-        'description': _noteController.text.trim(),
-        'items': ['Sample Item 1', 'Sample Item 2'],
-        'total': 25.99,
-      });
+      await _firestoreService.addOrder(
+        user.uid,
+        {
+          'userName': _userData?['name'] ?? 'Unknown',
+          'description': _noteController.text.trim(),
+          'items': ['Sample Item 1', 'Sample Item 2'],
+          'total': 25.99,
+        },
+      );
 
       _noteController.clear();
       
