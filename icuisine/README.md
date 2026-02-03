@@ -52,6 +52,43 @@ dependencies:
 
 ---
 
+## 🔑 Authentication Flow Details
+
+### Sign Up Logic
+- **Method Used:** `createUserWithEmailAndPassword()`
+- **Flow:**
+  1. User enters email and password.
+  2. Firebase validates and creates a new account.
+  3. On success, user is auto-logged in and redirected to `HomeScreen`.
+- **Error Handling:**
+  - Duplicate accounts show appropriate error messages.
+  - Weak passwords are rejected with a minimum length requirement.
+
+### Login Logic
+- **Method Used:** `signInWithEmailAndPassword()`
+- **Flow:**
+  1. User enters email and password.
+  2. Firebase authenticates the credentials.
+  3. On success, user is redirected to `HomeScreen`.
+- **Error Handling:**
+  - Invalid credentials show error messages.
+  - Network issues display connection error messages.
+
+### Logout Logic
+- **Method Used:** `FirebaseAuth.instance.signOut()`
+- **Flow:**
+  1. User clicks the logout button.
+  2. Firebase clears the session.
+  3. User is redirected to `AuthScreen`.
+
+### `authStateChanges()`
+- **Purpose:** Listens to authentication state changes in real-time.
+- **Implementation:**
+  - Automatically navigates between `AuthScreen` and `HomeScreen` based on user session.
+  - Simplifies navigation logic and ensures seamless transitions.
+
+---
+
 ## 📂 Implementation Files
 
 ### Key Files Created/Modified
@@ -192,6 +229,35 @@ flutter run
 - [FlutterFire Setup Guide](https://firebase.google.com/docs/flutter/setup)
 - [firebase_auth Package](https://pub.dev/packages/firebase_auth)
 - [Flutter Async Programming](https://dart.dev/codelabs/async-await)
+
+---
+
+## 📸 Screenshots
+
+### AuthScreen UI
+![AuthScreen](path/to/authscreen-screenshot.png)
+
+### HomeScreen UI
+![HomeScreen](path/to/homescreen-screenshot.png)
+
+### Firebase Console
+![Firebase Console](path/to/firebase-console-screenshot.png)
+
+---
+
+## 💭 Reflection
+
+### Hardest Part of the Flow
+- Managing real-time state changes with `StreamBuilder`.
+- Debugging navigation issues during auth state transitions.
+
+### How `StreamBuilder` Simplifies Navigation
+- Eliminates manual routing logic.
+- Automatically updates the UI based on user session.
+
+### Importance of Logout
+- Ensures session security by clearing sensitive data.
+- Prevents unauthorized access to user accounts.
 
 ---
 
