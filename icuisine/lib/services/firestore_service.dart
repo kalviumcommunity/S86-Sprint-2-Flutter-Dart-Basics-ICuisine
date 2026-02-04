@@ -8,6 +8,7 @@ class FirestoreService {
   static const String usersCollection = 'users';
   static const String ordersCollection = 'orders';
   static const String menuItemsCollection = 'menu_items';
+  static const String tasksCollection = 'tasks';
 
   // ========== USER OPERATIONS ==========
 
@@ -238,6 +239,40 @@ class FirestoreService {
         .where('vendorId', isEqualTo: vendorId)
         .orderBy('name')
         .snapshots();
+  }
+
+  // ========== TASK OPERATIONS ==========
+
+  /// Add a new task
+  Future<void> addTask(Map<String, dynamic> taskData) async {
+    try {
+      await _firestore.collection('tasks').add({
+        ...taskData,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Error adding task: $e');
+      throw 'Failed to add task. Please try again.';
+    }
+  }
+
+  /// Update an existing task
+  Future<void> updateTask(String taskId, Map<String, dynamic> taskData) async {
+    try {
+      await _firestore.collection('tasks').doc(taskId).update({
+        ...taskData,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Error updating task: $e');
+      throw 'Failed to update task. Please try again.';
+    }
+  }
+
+  /// Stream tasks in real-time
+  Stream<QuerySnapshot<Map<String, dynamic>>> streamTasks() {
+    return _firestore.collection('tasks').orderBy('createdAt', descending: true).snapshots();
   }
 
   // ========== GENERIC OPERATIONS ==========
