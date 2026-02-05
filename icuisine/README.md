@@ -737,3 +737,82 @@ This project is created for educational purposes.
 ---
 
 **Built with ❤️ using Flutter & Firebase**
+
+# 📷 Uploading and Managing Media Files with Firebase Storage
+
+Modern apps frequently handle images, documents, and media uploads — from profile pictures to chat attachments and product photos.
+
+This project demonstrates how to:
+- Pick an image from the device
+- Upload it securely to Firebase Storage
+- Retrieve and store the download URL
+- Display the uploaded media in your Flutter UI
+
+## 1. Add Dependencies
+In your `pubspec.yaml`:
+```yaml
+dependencies:
+  firebase_storage: ^12.0.0
+  image_picker: ^1.0.0
+```
+Install:
+```bash
+flutter pub get
+```
+
+## 2. Pick an Image
+```dart
+final picker = ImagePicker();
+final XFile? file = await picker.pickImage(source: ImageSource.gallery);
+```
+
+## 3. Upload to Firebase Storage
+```dart
+final filePath = file!.path;
+final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+await FirebaseStorage.instance
+  .ref("uploads/$fileName.jpg")
+  .putFile(File(filePath));
+```
+
+## 4. Get the Download URL
+```dart
+final downloadURL = await FirebaseStorage.instance
+  .ref("uploads/$fileName.jpg")
+  .getDownloadURL();
+```
+Store this URL in Firestore, user profile, etc.
+
+## 5. Display Uploaded Image
+```dart
+Image.network(downloadURL);
+```
+Handle loading, errors, and broken URLs as needed.
+
+## 6. Delete Files (Optional)
+```dart
+await FirebaseStorage.instance
+  .ref("uploads/$fileName.jpg")
+  .delete();
+```
+
+## 7. Security Rules
+Example rule:
+```
+allow read, write: if request.auth != null;
+```
+Require authentication, restrict write access, validate file types, and enforce max file sizes.
+
+## 8. Example Integration (User Dashboard)
+See `lib/services/media_service.dart` and `lib/screens/user_dashboard.dart` for a complete example:
+- Tap the image icon in the app bar to pick and upload a profile image
+- The uploaded image is displayed in the dashboard
+
+## 9. Test the Upload Flow
+- Select an image
+- Upload it
+- See the file in Firebase Console → Storage
+- Display the image in your app
+- Confirm the download URL is correct
+
+---

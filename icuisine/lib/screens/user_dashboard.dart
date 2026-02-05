@@ -4,6 +4,9 @@ import 'package:icuisine/services/auth_service.dart';
 import 'package:icuisine/services/firestore_service.dart';
 import '../animations/animated_widgets.dart';
 import '../animations/page_transitions.dart';
+import 'package:icuisine/services/media_service.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import 'login_screen.dart';
 
 class UserDashboard extends StatefulWidget {
@@ -16,10 +19,33 @@ class UserDashboard extends StatefulWidget {
 class _UserDashboardState extends State<UserDashboard> {
   final _authService = AuthService();
   final _firestoreService = FirestoreService();
+  final _mediaService = MediaService();
   
   final _noteController = TextEditingController();
   Map<String, dynamic>? _userData;
   bool _isLoadingUser = true;
+
+  String? _uploadedImageUrl;
+  bool _isUploading = false;
+
+  Future<void> _pickAndUploadImage() async {
+    setState(() => _isUploading = true);
+    final XFile? file = await _mediaService.pickImage();
+    if (file != null) {
+      final url = await _mediaService.uploadImage(file);
+      setState(() {
+        _uploadedImageUrl = url;
+        _isUploading = false;
+      });
+      if (url != null && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Image uploaded!'), backgroundColor: Colors.green),
+        );
+      }
+    } else {
+      setState(() => _isUploading = false);
+    }
+  }
 
   @override
   void initState() {
@@ -418,6 +444,7 @@ class _UserDashboardState extends State<UserDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -428,6 +455,11 @@ class _UserDashboardState extends State<UserDashboard> {
             onPressed: _logout,
             tooltip: 'Logout',
           ),
+          IconButton(
+            icon: const Icon(Icons.image),
+            tooltip: 'Upload Profile Image',
+            onPressed: _isUploading ? null : _pickAndUploadImage,
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -435,6 +467,33 @@ class _UserDashboardState extends State<UserDashboard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (_isUploading) ...[
+              const Center(child: CircularProgressIndicator()),
+              const SizedBox(height: 12),
+            ],
+            if (_uploadedImageUrl != null) ...[
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(60),
+                  child: Image.network(
+                    _uploadedImageUrl!,
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image, size: 80),
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
             _buildUserInfo(),
             const SizedBox(height: 16),
             _buildAddOrderCard(),
