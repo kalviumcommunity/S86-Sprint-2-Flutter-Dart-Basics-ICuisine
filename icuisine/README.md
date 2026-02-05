@@ -26,18 +26,20 @@ This eliminates the need for manual refresh or polling, providing a seamless, mo
 ## 🎯 Features Implemented
 
 ### ✅ Real-Time Updates Across the App
-
 1. **Live Order Tracking**
    - Users see instant updates when orders are created, updated, or completed
    - Vendors receive real-time notifications of new orders
    - Status changes reflect immediately in the UI
 
 2. **Dynamic User Dashboard**
-   - Real-time statistics (total orders, pending, completed, revenue)
    - Live order list that updates automatically
    - Instant synchronization across multiple devices
 
+
+
+
 3. **Authentication State Management**
+
    - Real-time user authentication status
    - Automatic navigation based on login state
 
@@ -49,21 +51,20 @@ This eliminates the need for manual refresh or polling, providing a seamless, mo
 
 ## 💻 Code Implementation
 
+
 ### 1. Firestore Dependency
 
 Added to `pubspec.yaml`:
 ```yaml
 dependencies:
   cloud_firestore: ^5.0.0
+
   firebase_core: ^3.0.0
-  firebase_auth: ^5.0.0
-```
 
 ---
 
-### 2. Snapshot Listener Types
 
-#### A. Collection Snapshots (Multiple Documents)
+
 
 **Implementation in FirestoreService:**
 
@@ -88,16 +89,10 @@ Stream<QuerySnapshot<Map<String, dynamic>>> streamVendorOrders(String vendorId) 
 
 /// Stream orders by status
 Stream<QuerySnapshot<Map<String, dynamic>>> streamUserOrdersByStatus(
+
   String userId,
-  String status,
-) {
-  return _firestore
+
       .collection(ordersCollection)
-      .where('userId', isEqualTo: userId)
-      .where('status', isEqualTo: status)
-      .orderBy('createdAt', descending: true)
-      .snapshots();  // ✅ Filtered real-time data
-}
 
 /// Stream menu items
 Stream<QuerySnapshot<Map<String, dynamic>>> streamMenuItems() {
