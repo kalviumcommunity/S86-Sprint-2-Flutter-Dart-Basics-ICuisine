@@ -21,10 +21,11 @@ A Flutter-based mobile app with:
 - **⚡ Live data synchronization (< 1 second updates)**
 - **📊 Dynamic statistics dashboard**
 - **🔄 Multi-device sync**
+- **☁️ Serverless Cloud Functions**
 
-## 🆕 Sprint-2: Real-Time Firestore Sync
+## 🆕 Sprint-2: Real-Time Firestore Sync & Cloud Functions
 
-**Latest Feature:** Real-time data synchronization using Cloud Firestore snapshot listeners!
+**Latest Features:** Real-time data synchronization and serverless backend with Cloud Functions!
 
 ### What's New:
 - ✅ **Instant Updates** - Orders, stats, and data update automatically
@@ -32,6 +33,16 @@ A Flutter-based mobile app with:
 - ✅ **Multi-Device Sync** - Changes appear on all devices instantly
 - ✅ **Live Statistics** - Real-time order counts and revenue tracking
 - ✅ **StreamBuilder Integration** - Clean, reactive UI architecture
+- ✅ **☁️ Cloud Functions** - Serverless backend logic
+- ✅ **🔔 Event-Based Triggers** - Auto-execute on Firestore changes
+- ✅ **📞 Callable Functions** - Direct invocation from Flutter
+
+### Cloud Functions Implemented:
+- **sayHello** - Callable function for greeting users
+- **processOrder** - Validate and process orders with custom logic
+- **newUserCreated** - Auto-trigger on new user signup (adds welcome bonus, profile fields)
+- **onOrderStatusChanged** - Auto-log order status changes
+- **onOrderDeleted** - Auto-archive deleted orders
 
 ### Performance:
 - ⚡ Update Latency: < 1 second
@@ -39,6 +50,7 @@ A Flutter-based mobile app with:
 - 📊 Data Consistency: 100%
 - 💪 Offline Support: Yes (cached data)
 
+- **Serverless:** Cloud Functions (Node.js)
 📖 **[View Full Implementation Details →](icuisine/README.md)**
 
 ## 🛠️ Tech Stack
@@ -68,14 +80,20 @@ flutter run
 ```
 icuisine/          # Main Flutter application
 ├── lib/           # Source code
-│   ├── services/
-│   │   └── firestore_service.dart    # 🔥 Real-time snapshot listeners
+│   ├── ├── firestore_service.dart         # 🔥 Real-time snapshot listeners
+│   │   └── cloud_functions_service.dart   # ☁️ Cloud Functions integration
 │   ├── screens/
-│   │   ├── home_screen.dart          # 📊 Live dashboard
-│   │   └── user_dashboard.dart       # 🎯 Real-time orders
-│   └── main.dart                     # Auth state streaming
+│   │   ├── home_screen.dart               # 📊 Live dashboard
+│   │   ├── user_dashboard.dart            # 🎯 Real-time orders
+│   │   └── cloud_functions_screen.dart    # ☁️ Functions demo
+│   └── main.dart                          # Auth state streaming
 ├── android/       # Android platform files
 ├── ios/           # iOS platform files
+└── README.md      # 📖 Full implementation details
+functions/         # Firebase Cloud Functions (Node.js)
+├── index.js       # ☁️ Function definitions
+├── package.json   # Node dependencies
+└── .gitignore     # Git ignore rule
 └── README.md      # 📖 Full implementation details
 ```
 
@@ -90,11 +108,15 @@ icuisine/          # Main Flutter application
 
 ## 🎓 Sprint Work
 
-### Sprint-1: Foundation ✅
-- Firebase setup
-- Authentication system
-- Basic CRUD operations
-- UI implementation
+### Sprint-1: Foundation ✅& Cloud Functions ✅
+- Firestore snapshot listeners
+- StreamBuilder integration
+- Live data synchronization
+- Multi-device support
+- **☁️ Cloud Functions setup**
+- **📞 Callable functions (sayHello, processOrder)**
+- **🔔 Event-based functions (newUserCreated, onOrderStatusChanged)**
+- **📊 Firebase Functions logs integration**
 
 ### Sprint-2: Real-Time Sync ✅
 - Firestore snapshot listeners
