@@ -716,6 +716,410 @@ flutter run
 
 ---
 
+## ☁️ Firebase Cloud Functions - Serverless Backend Logic
+
+Modern mobile applications often need backend logic — sending notifications, processing data, validating input, or updating related records. Instead of managing your own servers, Firebase provides **Cloud Functions**, a serverless backend that runs your code automatically in response to events.
+
+### What are Cloud Functions?
+
+Cloud Functions are server-side code that:
+- **Run automatically** when triggered by events (Firestore changes, user actions, etc.)
+- **Execute on-demand** when called directly from your Flutter app
+- **Scale automatically** without managing servers
+- **Reduce backend overhead** by eliminating server maintenance
+
+### 🎯 Cloud Functions Implemented
+
+#### 1. **Callable Functions** (Invoked from Flutter)
+
+##### `sayHello` - Greeting Function
+A simple callable function that greets users by name.
+
+**Cloud Function (functions/index.js):**
+```javascript
+exports.sayHello = functions.https.onCall((data, context) => {
+  const name = data.name || "User";
+  console.log(`sayHello called with name: ${name}`);
+  
+  return {
+    message: `Hello, ${name}! Welcome to ICuisine.`,
+    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+    userId: context.auth ? context.auth.uid : null,
+  };
+});
+```
+
+**Flutter Implementation (lib/services/cloud_functions_service.dart):**
+```dart
+Future<Map<String, dynamic>> callSayHello({String? name}) async {
+  final callable = _functions.httpsCallable('sayHello');
+  final result = await callable.call(<String, dynamic>{
+    'name': name ?? 'User',
+  });
+  return Map<String, dynamic>.from(result.data);
+}
+```
+
+**Use Case:** Personalized greetings, welcome messages, custom business logic
+
+---
+
+##### `processOrder` - Order Validation Function
+Validates and processes orders with custom business logic.
+
+**Cloud Function:**
+```javascript
+exports.processOrder = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError(
+      "unauthenticated",
+      "User must be authenticated to process orders."
+    );
+  }
+
+  const {orderId, items, totalAmount} = data;
+  
+  await admin.firestore().collection("orders").doc(orderId).update({
+    status: "processing",
+    processedAt: admin.firestore.FieldValue.serverTimestamp(),
+    processedBy: "cloud-function",
+  });
+
+  return {
+    success: true,
+    message: "Order processed successfully",
+    orderId: orderId,
+  };
+});
+```
+
+**Use Case:** Order validation, payment processing, inventory updates
+
+---
+
+#### 2. **Event-Based Functions** (Auto-triggered)
+
+##### `newUserCreated` - Auto-Profile Generation
+Triggers automatically when a new user document is created in Firestore.
+
+**Cloud Function:**
+```javascript
+exports.newUserCreated = functions.firestore
+  .document("users/{userId}")
+  .onCreate(async (snap, context) => {
+    const userData = snap.data();
+    const userId = context.params.userId;
+
+    console.log("New user created:", userId);
+
+    // Auto-generate additional profile fields
+    await snap.ref.update({
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      profileComplete: false,
+      orderCount: 0,
+      totalSpent: 0,
+      loyaltyPoints: 100,  // Welcome bonus!
+      accountStatus: "active",
+    });
+
+    return null;
+  });
+```
+
+**What it does:**
+- ✅ Adds timestamp automatically
+- ✅ Initializes order count and spending
+- ✅ Grants 100 welcome loyalty points
+- ✅ Sets account status to active
+
+**Use Case:** Welcome bonuses, profile initialization, send welcome emails
+
+---
+
+##### `onOrderStatusChanged` - Status Change Logger
+Triggers when an order's status is updated.
+
+**Cloud Function:**
+```javascript
+exports.onOrderStatusChanged = functions.firestore
+  .document("orders/{orderId}")
+  .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    
+    if (before.status !== after.status) {
+      console.log(`Order ${context.params.orderId} status: ${before.status} → ${after.status}`);
+      
+      // Log to separate collection
+      await admin.firestore().collection("order_logs").add({
+        orderId: context.params.orderId,
+        previousStatus: before.status,
+        newStatus: after.status,
+        changedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+    }
+    
+    return null;
+  });
+```
+
+**Use Case:** Push notifications, audit logs, analytics, email confirmations
+
+---
+
+##### `onOrderDeleted` - Archive Deleted Orders
+Triggers when an order is deleted to maintain records.
+
+**Cloud Function:**
+```javascript
+exports.onOrderDeleted = functions.firestore
+  .document("orders/{orderId}")
+  .onDelete(async (snap, context) => {
+    const orderData = snap.data();
+    
+    // Archive for record-keeping
+    await admin.firestore().collection("deleted_orders").doc(context.params.orderId).set({
+      ...orderData,
+      deletedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+    
+    return null;
+  });
+```
+
+**Use Case:** Data archiving, audit trails, compliance
+
+---
+
+### 📱 Flutter Integration
+
+#### 1. Add Dependency
+```yaml
+dependencies:
+  cloud_functions: ^5.0.0
+```
+
+#### 2. Create Service Class
+The `CloudFunctionsService` provides a clean interface for calling functions:
+
+```dart
+class CloudFunctionsService {
+  final FirebaseFunctions _functions = FirebaseFunctions.instance;
+
+  Future<Map<String, dynamic>> callSayHello({String? name}) async {
+    try {
+      final callable = _functions.httpsCallable('sayHello');
+      final result = await callable.call({'name': name ?? 'User'});
+      return Map<String, dynamic>.from(result.data);
+    } catch (e) {
+      throw Exception('Failed to call function: $e');
+    }
+  }
+}
+```
+
+#### 3. Call from UI
+```dart
+final result = await CloudFunctionsService().callSayHello(name: 'Alex');
+print(result['message']); // "Hello, Alex! Welcome to ICuisine."
+```
+
+#### 4. Cloud Functions Demo Screen
+Navigate to **Cloud Functions Demo** from the home screen to:
+- ✅ Test callable functions
+- ✅ Trigger event-based functions
+- ✅ View function responses
+- ✅ See real-time results
+
+---
+
+### 🚀 Deployment
+
+#### 1. Install Firebase Tools
+```bash
+npm install -g firebase-tools
+```
+
+#### 2. Login to Firebase
+```bash
+firebase login
+```
+
+#### 3. Initialize Functions (First time only)
+```bash
+cd functions
+npm install
+```
+
+#### 4. Deploy Functions
+```bash
+firebase deploy --only functions
+```
+
+#### 5. View Logs
+```bash
+firebase functions:log
+```
+
+Or view in **Firebase Console → Functions → Logs**
+
+---
+
+### 📊 Viewing Execution Logs
+
+#### Firebase Console Method:
+1. Open **Firebase Console** → **Functions**
+2. Click on **Logs** tab
+3. Trigger a function from the app
+4. Watch logs update in real-time
+5. Look for:
+   - ✅ Success messages
+   - 📊 Input data
+   - ❌ Errors (if any)
+   - ⏱️ Execution time
+
+#### Command Line Method:
+```bash
+firebase functions:log --only sayHello
+```
+
+---
+
+### 🎯 Real-World Use Cases
+
+#### Callable Functions:
+- **Payment Processing** - Validate and process payments securely
+- **Email Verification** - Send verification codes
+- **Data Validation** - Complex validation logic
+- **Third-Party API Calls** - Call external services securely
+- **Custom Business Logic** - Complex computations
+
+#### Event-Based Functions:
+- **Welcome Emails** - Send when user signs up
+- **Push Notifications** - Notify on order status change
+- **Data Cleanup** - Clean up related data on deletion
+- **Analytics** - Track events automatically
+- **Image Processing** - Resize uploaded images
+- **Backup** - Auto-backup critical data
+
+---
+
+### 🔒 Security Benefits
+
+Cloud Functions run in a **secure server environment**, allowing you to:
+- ✅ Hide API keys from client code
+- ✅ Validate authentication server-side
+- ✅ Enforce business rules consistently
+- ✅ Access admin SDK with full permissions
+- ✅ Process sensitive data securely
+
+---
+
+### 🎓 Why Serverless Functions Reduce Backend Overhead
+
+1. **No Server Management**
+   - No servers to set up, configure, or maintain
+   - Automatic scaling based on demand
+   - Pay only for execution time
+
+2. **Instant Deployment**
+   - Deploy with one command
+   - No downtime during updates
+   - Version control built-in
+
+3. **Built-in Monitoring**
+   - Logs automatically captured
+   - Error tracking included
+   - Performance metrics available
+
+4. **Automatic Scaling**
+   - Handles 1 user or 1 million users
+   - No capacity planning needed
+   - Traffic spikes handled automatically
+
+5. **Cost Effective**
+   - Free tier: 2M invocations/month
+   - Pay per execution (not per server)
+   - No idle server costs
+
+---
+
+### 📸 Screenshots
+
+#### Cloud Functions Demo Screen
+![Cloud Functions Screen](screenshots/cloud_functions_screen.png)
+*Interactive UI for testing callable and event-based functions*
+
+#### Firebase Console - Functions
+![Firebase Functions](screenshots/firebase_functions.png)
+*Deployed functions in Firebase Console*
+
+#### Firebase Console - Logs
+![Function Logs](screenshots/function_logs.png)
+*Real-time execution logs showing successful function calls*
+
+#### Function Response
+![Function Response](screenshots/function_response.png)
+*App displaying Cloud Function response*
+
+---
+
+### 🧪 Testing Cloud Functions
+
+#### Test Callable Function:
+1. Open the app
+2. Navigate to **Cloud Functions Demo**
+3. Enter your name
+4. Click **Call sayHello()**
+5. See the response displayed
+6. Check Firebase logs for execution details
+
+#### Test Event-Based Function:
+1. Click **Trigger newUserCreated**
+2. A test user document is created
+3. Function automatically executes
+4. Check Firebase Console → Firestore to see auto-generated fields
+5. View logs to confirm execution
+
+---
+
+### 📝 Reflection
+
+#### Why Serverless Functions Reduce Backend Overhead
+
+**Traditional Backend:**
+- Set up and maintain servers
+- Configure load balancers
+- Manage scaling
+- Monitor uptime
+- Apply security patches
+- Pay for idle time
+
+**Cloud Functions:**
+- Write code, deploy, done!
+- Auto-scaling included
+- Built-in monitoring
+- Security managed by Firebase
+- Pay per execution only
+
+#### Function Type Chosen
+
+We implemented **both callable and event-based functions** to demonstrate:
+- **Callable:** Direct control from Flutter (sayHello, processOrder)
+- **Event-Based:** Automatic triggers (newUserCreated, onOrderStatusChanged)
+
+#### Real-World Use Cases
+
+1. **Welcome Bonus System** - Automatically grant points to new users
+2. **Order Processing** - Validate orders and update inventory
+3. **Audit Trails** - Log all status changes for compliance
+4. **Data Archiving** - Preserve deleted records
+5. **Notifications** - Send alerts on important events
+
+This serverless architecture allows our ICuisine app to scale effortlessly while maintaining clean, secure backend logic.
+
+---
+
 ## 🤝 Contributing
 
 This project demonstrates real-time Firestore integration as part of Sprint-2 coursework.

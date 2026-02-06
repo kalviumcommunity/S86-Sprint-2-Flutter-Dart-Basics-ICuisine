@@ -9,6 +9,7 @@ import 'user_input_form.dart';
 import 'stateless_stateful_demo.dart';
 import 'hot_reload_demo.dart';
 import 'state_management_demo.dart';
+import 'cloud_functions_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -217,6 +218,18 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             actions: [
+              IconButton(
+                icon: const Icon(Icons.cloud_outlined),
+                tooltip: 'Cloud Functions',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CloudFunctionsScreen(),
+                    ),
+                  );
+                },
+              ),
               IconButton(
                 icon: const Icon(Icons.science_outlined),
                 tooltip: 'State Management Demo',
