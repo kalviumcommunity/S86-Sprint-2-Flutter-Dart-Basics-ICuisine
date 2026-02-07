@@ -1142,81 +1142,167 @@ This project is created for educational purposes.
 
 **Built with ❤️ using Flutter & Firebase**
 
-# 📷 Uploading and Managing Media Files with Firebase Storage
+# Securing Firebase with Authentication and Firestore Rules
 
-Modern apps frequently handle images, documents, and media uploads — from profile pictures to chat attachments and product photos.
+Modern mobile apps frequently store sensitive user data in the cloud. Firebase provides a powerful NoSQL database—Cloud Firestore—but it must be properly secured to prevent unauthorized access. In this lesson, you will learn how to secure Firestore using Authentication and custom security rules that determine who can read or write specific documents.
 
-This project demonstrates how to:
-- Pick an image from the device
-- Upload it securely to Firebase Storage
-- Retrieve and store the download URL
-- Display the uploaded media in your Flutter UI
+Every Firestore database starts in “test mode,” which grants open read/write access to anyone. While convenient during initial development, this is unsafe for production apps. Using Firebase Authentication, you can ensure only signed-in users can write or read data, and Firestore Security Rules allow you to apply fine-grained restrictions—for example: Only allow the owner of a document to update it.
 
-## 1. Add Dependencies
-In your `pubspec.yaml`:
+- Block all anonymous writes.
+- Restrict admin-only operations.
+
+This lesson walks you through configuring Firebase Auth, writing secure Firestore rules, testing them, and understanding the difference between safe, basic, and open rules.
+
+## 1. Why Securing Firestore Matters
+- Protects user data from unauthorized access.
+- Ensures that only authenticated users can write to or read the database.
+- Prevents malicious usage, spam writes, data deletion, or tampering.
+- Enforces role-based permissions (e.g., admin vs. regular user).
+- Required before deploying apps to real users.
+
+## 2. Firebase Authentication Setup
+
+### Step 1: Add Required Dependencies
 ```yaml
 dependencies:
-  firebase_storage: ^12.0.0
-  image_picker: ^1.0.0
+  firebase_core: ^latest
+  firebase_auth: ^latest
+  cloud_firestore: ^latest
 ```
-Install:
+Run:
 ```bash
 flutter pub get
 ```
 
-## 2. Pick an Image
+### Step 2: Initialize Firebase
 ```dart
-final picker = ImagePicker();
-final XFile? file = await picker.pickImage(source: ImageSource.gallery);
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const MyApp());
+}
 ```
 
-## 3. Upload to Firebase Storage
+### Step 3: Enable Authentication
+In the Firebase Console:
+
+1. Go to Authentication → Sign-in methods
+2. Enable:
+   - Email/Password OR
+   - Any provider you prefer (Google, Phone, etc.)
+
+### Step 4: Sign Up / Sign In a User in Flutter
 ```dart
-final filePath = file!.path;
-final fileName = DateTime.now().millisecondsSinceEpoch.toString();
-await FirebaseStorage.instance
-  .ref("uploads/$fileName.jpg")
-  .putFile(File(filePath));
+final auth = FirebaseAuth.instance;
+
+Future<UserCredential> signIn(String email, String pass) {
+  return auth.signInWithEmailAndPassword(email: email, password: pass);
+}
+```
+Once authenticated, `FirebaseAuth.instance.currentUser` represents the signed-in user.
+
+## 3. Securing Firestore With Rules
+
+Firestore Rules control:
+- Who can read a document
+- Who can write a document
+- Under what conditions they can do so
+
+### Open Rules (Unsafe):
+```firestore
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;  // ❌ Completely open
+    }
+  }
+}
 ```
 
-## 4. Get the Download URL
+### Secure Example (Recommended for Assignments):
+Allow reads/writes only for authenticated users:
+```firestore
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}
+```
+This rule ensures:
+- User must be logged in
+- User can only access their own document
+- No cross-account reading or writing
+
+## 4. Firestore Access From Flutter
+
+### Example: Write Data (Authenticated User)
 ```dart
-final downloadURL = await FirebaseStorage.instance
-  .ref("uploads/$fileName.jpg")
-  .getDownloadURL();
-```
-Store this URL in Firestore, user profile, etc.
+final uid = FirebaseAuth.instance.currentUser!.uid;
 
-## 5. Display Uploaded Image
+await FirebaseFirestore.instance
+    .collection('users')
+    .doc(uid)
+    .set({
+  'name': 'John Doe',
+  'lastLogin': DateTime.now(),
+});
+```
+
+### Example: Restricted Read
 ```dart
-Image.network(downloadURL);
-```
-Handle loading, errors, and broken URLs as needed.
+final uid = FirebaseAuth.instance.currentUser!.uid;
 
-## 6. Delete Files (Optional)
+final data = await FirebaseFirestore.instance
+    .collection('users')
+    .doc(uid)
+    .get();
+
+print(data.data());
+```
+If the rules deny access, this will throw a `FirebaseException`.
+
+## 5. Testing Firestore Rules
+
+In Firebase Console:
+1. Go to Firestore → Rules
+2. Switch to the Rules Playground
+3. Simulate:
+   - Authenticated request (with UID)
+   - Unauthenticated request
+4. Test for read or write access
+
+## 6. Minimal Example
+
+### Firestore Service Class
 ```dart
-await FirebaseStorage.instance
-  .ref("uploads/$fileName.jpg")
-  .delete();
+class FirestoreService {
+  final auth = FirebaseAuth.instance;
+  final db = FirebaseFirestore.instance;
+
+  Future<void> updateUserProfile() async {
+    final uid = auth.currentUser!.uid;
+
+    await db.collection('users').doc(uid).set({
+      'updatedAt': DateTime.now(),
+    });
+  }
+}
 ```
 
-## 7. Security Rules
-Example rule:
+### Corresponding Firestore Rule
+```firestore
+match /users/{uid} {
+  allow read, write: if request.auth.uid == uid;
+}
 ```
-allow read, write: if request.auth != null;
-```
-Require authentication, restrict write access, validate file types, and enforce max file sizes.
 
-## 8. Example Integration (User Dashboard)
-See `lib/services/media_service.dart` and `lib/screens/user_dashboard.dart` for a complete example:
-- Tap the image icon in the app bar to pick and upload a profile image
-- The uploaded image is displayed in the dashboard
+## 7. Common Issues & Fixes
 
-## 9. Test the Upload Flow
-- Select an image
-- Upload it
-- See the file in Firebase Console → Storage
-- Display the image in your app
-- Confirm the download URL is correct
-
----
+| Issue                          | Cause                        | Fix                                      |
+|-------------------------------|-----------------------------|------------------------------------------|
+| PERMISSION_DENIED             | Rules block access          | Check rules + auth user UID              |
+| Writes fail from unauthenticated users | No login performed        | Ensure sign-in before DB calls           |
+| Accidentally open rules       | Started in test mode        | Replace with secure rules                |
+| Google sign-in works locally but fails on release | Missing SHA keys         | Add SHA-1/SHA-256 to Firebase project    |
