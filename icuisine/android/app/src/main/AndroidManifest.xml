@@ -9,6 +9,7 @@
             android:value="YOUR_API_KEY_HERE"/>
         <!-- Location permission for user location -->
         <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+        <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

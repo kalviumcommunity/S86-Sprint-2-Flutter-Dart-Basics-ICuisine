@@ -26,18 +26,40 @@ This eliminates the need for manual refresh or polling, providing a seamless, mo
 ## 🎯 Features Implemented
 ### 🗺️ Google Maps Integration
 1. **Interactive Map View**
-  - Display live Google Maps inside the app
-  - Supports panning, zooming, and user location
-  - Custom markers for vendors, orders, or locations
-2. **Setup Instructions**
-  - Add `google_maps_flutter` to `pubspec.yaml`
-  - Obtain Google Maps API key from Google Cloud Console
-  - Add API key to Android (`android/app/src/main/AndroidManifest.xml`) and iOS (`ios/Runner/AppDelegate.swift`, `ios/Runner/Info.plist`)
-  - Add location permissions for Android and iOS
-  - Example map screen: `lib/screens/map_screen.dart`
-3. **Usage Example**
-  - See `MapScreen` widget for a minimal Google Map implementation
-  - Enable user location and add markers as needed
+   - Display live Google Maps inside the app
+   - Supports panning, zooming, and user location
+   - Custom markers for vendors, orders, or locations
+2. **User Location & Permissions**
+   - Uses the `geolocator` package for GPS access
+   - Requests runtime permissions for location (Android/iOS)
+   - Android: Add these to `AndroidManifest.xml`:
+     ```xml
+     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+     ```
+   - iOS: Add this to `Info.plist`:
+     ```xml
+     <key>NSLocationWhenInUseUsageDescription</key>
+     <string>This app requires location access to show your current position.</string>
+     ```
+3. **Setup Instructions**
+   - Add to `pubspec.yaml`:
+     ```yaml
+     dependencies:
+       google_maps_flutter: ^2.5.0
+       geolocator: ^10.1.0
+     flutter:
+       assets:
+         - assets/location_pin.png
+     ```
+   - Obtain Google Maps API key from Google Cloud Console
+   - Add API key to Android (`android/app/src/main/AndroidManifest.xml`) and iOS (`ios/Runner/AppDelegate.swift`, `ios/Runner/Info.plist`)
+   - Example map screen: `lib/screens/map_screen.dart`
+   - Add a PNG marker icon to `assets/location_pin.png`
+4. **Usage Example**
+   - See `MapScreen` widget for fetching user location, centering the map, and displaying a custom marker
+   - Uses `Geolocator.getCurrentPosition()` and `getPositionStream()` for live tracking
+   - Custom marker created with `BitmapDescriptor.fromAssetImage`
 
 ### ✅ Real-Time Updates Across the App
 1. **Live Order Tracking**
