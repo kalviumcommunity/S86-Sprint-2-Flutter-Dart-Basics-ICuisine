@@ -3,6 +3,8 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app requires location access to display maps.</string>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Icuisine</string>
