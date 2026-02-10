@@ -4,7 +4,7 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app requires location access to display maps.</string>
+	<string>This app requires location access to show your current position.</string>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Icuisine</string>
