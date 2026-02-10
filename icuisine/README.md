@@ -24,6 +24,20 @@ This eliminates the need for manual refresh or polling, providing a seamless, mo
 ---
 
 ## 🎯 Features Implemented
+### 🗺️ Google Maps Integration
+1. **Interactive Map View**
+  - Display live Google Maps inside the app
+  - Supports panning, zooming, and user location
+  - Custom markers for vendors, orders, or locations
+2. **Setup Instructions**
+  - Add `google_maps_flutter` to `pubspec.yaml`
+  - Obtain Google Maps API key from Google Cloud Console
+  - Add API key to Android (`android/app/src/main/AndroidManifest.xml`) and iOS (`ios/Runner/AppDelegate.swift`, `ios/Runner/Info.plist`)
+  - Add location permissions for Android and iOS
+  - Example map screen: `lib/screens/map_screen.dart`
+3. **Usage Example**
+  - See `MapScreen` widget for a minimal Google Map implementation
+  - Enable user location and add markers as needed
 
 ### ✅ Real-Time Updates Across the App
 1. **Live Order Tracking**
@@ -789,7 +803,7 @@ exports.processOrder = functions.https.onCall(async (data, context) => {
     success: true,
     message: "Order processed successfully",
     orderId: orderId,
-  };
+   };
 });
 ```
 

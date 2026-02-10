@@ -25,17 +25,8 @@ A Flutter-based mobile app with:
 
 ## 🆕 Sprint-2: Real-Time Firestore Sync & Cloud Functions
 
-**Latest Features:** Real-time data synchronization and serverless backend with Cloud Functions!
+**Latest Features:** Real-time data synchronization, serverless backend with Cloud Functions, and Google Maps integration!
 
-### What's New:
-- ✅ **Instant Updates** - Orders, stats, and data update automatically
-- ✅ **No Manual Refresh** - UI stays in sync without user action
-- ✅ **Multi-Device Sync** - Changes appear on all devices instantly
-- ✅ **Live Statistics** - Real-time order counts and revenue tracking
-- ✅ **StreamBuilder Integration** - Clean, reactive UI architecture
-- ✅ **☁️ Cloud Functions** - Serverless backend logic
-- ✅ **🔔 Event-Based Triggers** - Auto-execute on Firestore changes
-- ✅ **📞 Callable Functions** - Direct invocation from Flutter
 
 ### Cloud Functions Implemented:
 - **sayHello** - Callable function for greeting users
@@ -44,11 +35,20 @@ A Flutter-based mobile app with:
 - **onOrderStatusChanged** - Auto-log order status changes
 - **onOrderDeleted** - Auto-archive deleted orders
 
+### Google Maps Integration:
+The app now supports Google Maps for location-based features:
+
+- Add your Google Maps API key in:
+	- Android: `icuisine/android/app/src/main/AndroidManifest.xml`
+	- iOS: `icuisine/ios/Runner/AppDelegate.swift` and `icuisine/ios/Runner/Info.plist`
+- Supports user location, panning, zooming, and custom markers.
+- Example map screen: `icuisine/lib/screens/map_screen.dart`
+
 ### Performance:
-- ⚡ Update Latency: < 1 second
-- 🔄 Multi-Device Sync: < 2 seconds
-- 📊 Data Consistency: 100%
-- 💪 Offline Support: Yes (cached data)
+⚡ Update Latency: < 1 second
+🔄 Multi-Device Sync: < 2 seconds
+📊 Data Consistency: 100%
+💪 Offline Support: Yes (cached data)
 
 - **Serverless:** Cloud Functions (Node.js)
 📖 **[View Full Implementation Details →](icuisine/README.md)**
